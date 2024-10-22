@@ -1,0 +1,1 @@
+# EDIGéO Exchange Format
