@@ -4,7 +4,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-/// The Main [`EDIGéO`] struct that holdes paths to the min required files
+/// The Main `EDIGéO` struct that holdes paths to the min required files
 #[derive(Debug, Default)]
 pub struct EdigeoDir {
     pub thf: String,
@@ -25,7 +25,6 @@ impl EdigeoDir {
             .as_ref()
             .read_dir()
             .unwrap()
-            .into_iter()
             .map(|file| file.unwrap().path())
             .collect::<Vec<PathBuf>>();
 
@@ -42,7 +41,7 @@ impl EdigeoDir {
                     x if x.ends_with(".DIC") => acc.dic = Some(num.to_string_lossy().to_string()),
                     x if x.ends_with(".SCD") => acc.scd = Some(num.to_string_lossy().to_string()),
                     x if x.ends_with(".GEN") => acc.gen = Some(num.to_string_lossy().to_string()),
-                    _ => println!(""),
+                    _ => todo!(),
                 }
             }
             acc
@@ -56,7 +55,6 @@ impl EdigeoDir {
                 .as_ref()
                 .read_dir()
                 .unwrap()
-                .into_iter()
                 .map(|file| file.unwrap().file_name())
                 .collect::<Vec<OsString>>();
 
