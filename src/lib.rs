@@ -14,7 +14,11 @@
 //! An EDIGéO lot is described in several plain text files. These files are listed below:
 //! `.GEN` - General Information
 pub mod directory;
-use std::{fs, io::Read, path::Path};
+use std::{
+    fs::{self, File},
+    io::{self, BufRead, Read},
+    path::Path,
+};
 
 pub use directory::EdigeoDir;
 
@@ -27,6 +31,14 @@ pub fn read<P: AsRef<Path>>(path: P) -> String {
     contents.into_owned()
 }
 
+pub fn read_lines(filename: &str) -> Vec<String> {
+    fs::read_to_string(filename)
+        .unwrap() // panic on possible file-reading errors
+        .lines() // split the string into an iterator of string slices
+        .map(String::from) // make each slice into a string
+        .collect() // gather them together into a vector
+}
+
 pub fn read_bytes<P: AsRef<Path>>(path: P) -> String {
     let mut rdr = encoding_rs_io::DecodeReaderBytesBuilder::new()
         .encoding(Some(encoding_rs::WINDOWS_1252))
@@ -37,4 +49,17 @@ pub fn read_bytes<P: AsRef<Path>>(path: P) -> String {
     rdr.read_to_string(&mut string).unwrap();
 
     string
+}
+
+/// Efficient txt file reader that passes ownership to File::open() which uses a BufReader thus reduing
+/// internal allocations. The internal bytes are decoded using `WINDOWS_1252` encoding (Latin1)
+pub fn read_lines_efficient<P>(path: P) -> io::Result<impl Iterator<Item = io::Result<String>>>
+where
+    P: AsRef<Path>,
+{
+    let rdr = encoding_rs_io::DecodeReaderBytesBuilder::new()
+        .encoding(Some(encoding_rs::WINDOWS_1252))
+        .build(fs::File::open(path.as_ref())?);
+
+    Ok(io::BufReader::new(rdr).lines())
 }

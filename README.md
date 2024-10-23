@@ -1,6 +1,6 @@
-# [`EDIGéO`](https://www.data.gouv.fr/s/resources/plan-cadastral-informatise/20170906-150737/standard_edigeo_2013.pdf) Exchange Format
+# EDIGéO Exchange Format
 
-The **EDIGéO** (__Electronic Data Interchange in the field of Geographic Information__) format was established
+The [`EDIGéO`](https://www.data.gouv.fr/s/resources/plan-cadastral-informatise/20170906-150737/standard_edigeo_2013.pdf) (_Electronic Data Interchange in the field of Geographic Information_) format was established
 by the French standards association (AFNOR). EDIGéO is a standardized format commonly used in France for
 the exchange of geographical information.
 

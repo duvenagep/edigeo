@@ -1,5 +1,4 @@
 use std::{
-    ffi::OsString,
     fs::{self},
     path::{Path, PathBuf},
 };
@@ -47,24 +46,6 @@ impl EdigeoDir {
             acc
         });
         dir
-    }
-
-    pub fn read_dir<P: AsRef<Path>>(path: P) {
-        if path.as_ref().is_dir() {
-            let files = path
-                .as_ref()
-                .read_dir()
-                .unwrap()
-                .map(|file| file.unwrap().file_name())
-                .collect::<Vec<OsString>>();
-
-            println!("{:?}", files);
-
-            for entry in path.as_ref().read_dir().unwrap() {
-                println!("{:?}", entry.unwrap().path());
-            }
-            println!("Is dir s that's good!");
-        }
     }
 
     pub fn list_files<P: AsRef<Path>>(path: P) -> Vec<String> {
