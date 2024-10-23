@@ -1,4 +1,4 @@
-use edigeo::{read_lines, read_lines_efficient, EdigeoDir};
+use edigeo::{read_lines_efficient, EdigeoDir};
 
 fn main() {
     println!("Hello World");

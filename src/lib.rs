@@ -15,7 +15,7 @@
 //! `.GEN` - General Information
 pub mod directory;
 use std::{
-    fs::{self, File},
+    fs::{self},
     io::{self, BufRead, Read},
     path::Path,
 };
