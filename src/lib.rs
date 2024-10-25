@@ -15,6 +15,7 @@
 //! `.GEN` - General Information
 pub mod directory;
 pub mod error;
+pub mod header;
 use std::{
     fs::{self},
     io::{self, BufRead},

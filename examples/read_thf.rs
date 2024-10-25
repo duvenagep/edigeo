@@ -11,6 +11,7 @@ fn main() {
 
     if let Ok(lines) = read_lines_efficient(e.t1) {
         for line in lines {
+            println!("{line}");
             if !line.is_empty() {
                 let data = Line::parse_line(&line);
                 println!("{:?}", data);
@@ -21,9 +22,9 @@ fn main() {
 
 #[derive(Debug, Clone)]
 pub struct Line {
-    header: Header,
-    raw_value: String,
-    parsed_value: Option<FormatResult>,
+    pub header: Header,
+    pub raw_value: String,
+    pub parsed_value: Option<FormatResult>,
 }
 
 impl Line {
@@ -42,7 +43,8 @@ pub fn parse_value(header: Header, raw_value: &str) -> Option<FormatResult> {
     if header.value_size != raw_value.chars().count() {
         panic!("value size mismatch!");
     }
-    let parser = get_parser(header.value_format);
+    let parser = get_parser(header);
+
     let parsed_value = parser.parse(raw_value);
 
     parsed_value
@@ -145,7 +147,7 @@ pub enum FormatResult {
     Int(i32),
     Date(String),
     Text(String),
-    Descriptor(Vec<String>),
+    Descriptor(Vec<FormatResult>),
 }
 
 pub trait FormatParser {
@@ -195,23 +197,29 @@ impl FormatParser for TextParser {
     }
 }
 
-// pub struct DescriptorParser;
-// impl FormatParser for DescriptorParser {
-//     fn parse(&self, raw_value: &str) -> Option<FormatResult> {
+pub struct DescriptorParser;
+impl FormatParser for DescriptorParser {
+    fn parse(&self, raw_value: &str) -> Option<FormatResult> {
+        let sections = raw_value
+            .split(";")
+            .map(|v| FormatResult::Text(v.to_string()))
+            .collect::<Vec<FormatResult>>();
+        Some(FormatResult::Descriptor(sections))
+    }
+}
 
-//         let v = raw_value.split(";").collect::<String>();
-
-//     }
-// }
-
-pub fn get_parser(value_format: FormatField) -> Box<dyn FormatParser> {
-    match value_format {
+pub fn get_parser(header: Header) -> Box<dyn FormatParser> {
+    match header.value_format {
         FormatField::A => Box::new(TextParser),
         FormatField::C | FormatField::R => Box::new(FloatParser),
         FormatField::D => Box::new(DateParser),
         FormatField::E => Box::new(TextParser),
         FormatField::N | FormatField::I => Box::new(IntParser),
-        FormatField::P => Box::new(TextParser),
+        FormatField::P => match header.value_type {
+            NatureField::T => Box::new(TextParser),
+            NatureField::S => Box::new(TextParser),
+            NatureField::C => Box::new(DescriptorParser),
+        },
         FormatField::T => Box::new(TextParser),
         FormatField::WhiteSpace => Box::new(NoneParser),
     }
