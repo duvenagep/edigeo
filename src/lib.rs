@@ -14,6 +14,7 @@
 //! An EDIGéO lot is described in several plain text files. These files are listed below:
 //! `.GEN` - General Information
 pub mod directory;
+pub mod error;
 use std::{
     fs::{self},
     io::{self, BufRead},
@@ -31,6 +32,7 @@ where
     let rdr = encoding_rs_io::DecodeReaderBytesBuilder::new()
         .encoding(Some(encoding_rs::WINDOWS_1252))
         .build(fs::File::open(path.as_ref())?);
+
     let lines = io::BufReader::new(rdr)
         .lines()
         .map(|l| l.unwrap())
