@@ -24,7 +24,7 @@ use std::{
 
 pub use directory::EdigeoDir;
 
-/// Efficient txt file reader that passes ownership to File::open() which uses a BufReader thus reduing
+/// Efficient txt file reader that passes ownership to File::open() which uses a BufReader thus reducing
 /// internal allocations. The internal bytes are decoded using `WINDOWS_1252` encoding (Latin1)
 pub fn read_lines_efficient<P>(path: P) -> io::Result<Vec<String>>
 where

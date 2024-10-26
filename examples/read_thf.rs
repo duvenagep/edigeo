@@ -11,7 +11,6 @@ fn main() {
 
     if let Ok(lines) = read_lines_efficient(e.t1) {
         for line in lines {
-            println!("{line}");
             if !line.is_empty() {
                 let data = Line::parse_line(&line);
                 println!("{:?}", data);
@@ -43,8 +42,8 @@ pub fn parse_value(header: Header, raw_value: &str) -> Option<FormatResult> {
     if header.value_size != raw_value.chars().count() {
         panic!("value size mismatch!");
     }
-    let parser = get_parser(header);
 
+    let parser = get_parser(header);
     let parsed_value = parser.parse(raw_value);
 
     parsed_value
@@ -119,7 +118,7 @@ impl FromStr for FormatField {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum NatureField {
     /// reserved logical record
     T,

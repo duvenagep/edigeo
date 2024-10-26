@@ -11,26 +11,40 @@ pub struct Header {
 
 impl Header {
     pub fn parse_header(line: &str) -> Self {
-        let value_type = line[3..4]
-            .parse::<ValueType>()
-            .expect("Error parsing NatureField");
-        let value_format = line[4..5]
-            .parse::<ValueFormat>()
-            .expect("Error parsing FormatField");
+        let code = parse_code(line);
+        let value_type = parse_value_type(line);
+        let value_format = parse_value_format(line);
+        let value_size = parse_value_size(line);
         Self {
-            code: line[0..3].to_string(),
+            code,
             value_type,
             value_format,
-            value_size: line[5..7].parse::<usize>().unwrap(),
+            value_size,
         }
     }
+}
 
-    pub fn parse_code(line: &str) -> String {
-        if line.len() != 8 {
-            panic!("Incorrect Data lenght, must be 8 chars")
-        }
-        line[0..3].to_string()
-    }
+/// `Edigeo` header consists on 8 bytes. The first 3 bytes of the header is
+/// the header code for example `RIY`.
+pub fn parse_code(line: &str) -> String {
+    assert!(line.contains(":"), "Input str not of valid form");
+    line[0..3].to_string()
+}
+
+pub fn parse_value_type(line: &str) -> ValueType {
+    line[3..4]
+        .parse::<ValueType>()
+        .expect("Error parsing ValueType")
+}
+
+pub fn parse_value_format(line: &str) -> ValueFormat {
+    line[4..5]
+        .parse::<ValueFormat>()
+        .expect("Error parsing ValueFormat")
+}
+
+pub fn parse_value_size(line: &str) -> usize {
+    line[5..7].parse::<usize>().unwrap()
 }
 
 #[derive(Debug, Clone, PartialEq)]
