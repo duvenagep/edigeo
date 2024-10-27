@@ -1,3 +1,9 @@
+//! Contains custom [`EdigeoError`] and [`EdigeoResult`] types.
+
+/// This Enum Represents all different EdigeoErrors that can occur.
+///
+/// This enum defines different types of errors that may occur when performing
+/// operations such as reading, writing, or processing Edigeo files.
 #[derive(Debug, thiserror::Error)]
 pub enum EdigeoError {
     /// IO Error fo reading & writing files
