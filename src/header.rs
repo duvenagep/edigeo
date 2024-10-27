@@ -1,5 +1,6 @@
 //! Contains Edigeo file [`Header`] definition & logic..
 
+use crate::error::*;
 use std::str::FromStr;
 
 /// Represents a parsed header in an Edigeo `Line`.
@@ -25,17 +26,17 @@ impl Header {
     ///
     /// Extracts the header code, value type, format, and size from specified
     /// byte positions in the line.
-    pub fn parse_header(line: &str) -> Self {
+    pub fn parse_header(line: &str) -> EdigeoResult<Self> {
         let code = parse_code(line);
-        let value_type = parse_value_type(line);
-        let value_format = parse_value_format(line);
-        let value_size = parse_value_size(line);
-        Self {
+        let value_type = parse_value_type(line)?;
+        let value_format = parse_value_format(line)?;
+        let value_size = parse_value_size(line)?;
+        Ok(Self {
             code,
             value_type,
             value_format,
             value_size,
-        }
+        })
     }
 }
 
@@ -56,11 +57,9 @@ pub fn parse_code(line: &str) -> String {
 ///
 /// # Panics
 /// Panics if parsing `ValueType` fails.
-pub fn parse_value_type(line: &str) -> ValueType {
+pub fn parse_value_type(line: &str) -> EdigeoResult<ValueType> {
     assert!(line.contains(":"), "Input str not of valid form");
-    line[3..4]
-        .parse::<ValueType>()
-        .expect("Error parsing ValueType")
+    Ok(line[3..4].parse::<ValueType>()?)
 }
 
 /// Parses the value format from the 5th byte of the header line.
@@ -69,11 +68,9 @@ pub fn parse_value_type(line: &str) -> ValueType {
 ///
 /// # Panics
 /// Panics if parsing `ValueFormat` fails.
-pub fn parse_value_format(line: &str) -> ValueFormat {
+pub fn parse_value_format(line: &str) -> EdigeoResult<ValueFormat> {
     assert!(line.contains(":"), "Input str not of valid form");
-    line[4..5]
-        .parse::<ValueFormat>()
-        .expect("Error parsing ValueFormat")
+    Ok(line[4..5].parse::<ValueFormat>()?)
 }
 
 /// Parses the value size from the 6th and 7th bytes of the header line.
@@ -82,9 +79,9 @@ pub fn parse_value_format(line: &str) -> ValueFormat {
 ///
 /// # Panics
 /// Panics if parsing `usize` fails.
-pub fn parse_value_size(line: &str) -> usize {
+pub fn parse_value_size(line: &str) -> EdigeoResult<usize> {
     assert!(line.contains(":"), "Input str not of valid form");
-    line[5..7].parse::<usize>().unwrap()
+    Ok(line[5..7].parse::<usize>()?)
 }
 
 /// Specifies the format of a value in an Edigeo header.
@@ -113,8 +110,8 @@ pub enum ValueFormat {
 }
 
 impl FromStr for ValueFormat {
-    type Err = String;
-    fn from_str(input: &str) -> Result<Self, Self::Err> {
+    type Err = EdigeoError;
+    fn from_str(input: &str) -> EdigeoResult<Self> {
         match input {
             "A" => Ok(ValueFormat::A),
             "C" => Ok(ValueFormat::C),
@@ -126,7 +123,7 @@ impl FromStr for ValueFormat {
             "R" => Ok(ValueFormat::R),
             "T" => Ok(ValueFormat::T),
             " " => Ok(ValueFormat::WhiteSpace),
-            _ => Err(format!("Invalid Character for ValueFormat: {}", input)),
+            _ => Err(EdigeoError::InvalidFormat(input.to_string())),
         }
     }
 }
@@ -143,13 +140,13 @@ pub enum ValueType {
 }
 
 impl FromStr for ValueType {
-    type Err = String;
-    fn from_str(input: &str) -> Result<Self, Self::Err> {
+    type Err = EdigeoError;
+    fn from_str(input: &str) -> EdigeoResult<Self> {
         match input {
             "T" => Ok(ValueType::T),
             "S" => Ok(ValueType::S),
             "C" => Ok(ValueType::C),
-            _ => Err(format!("Invalid Character for NatureField: {}", input)),
+            _ => Err(EdigeoError::InvalidFormat(input.to_string())),
         }
     }
 }

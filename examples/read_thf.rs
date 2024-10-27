@@ -1,4 +1,8 @@
-use edigeo::{read_lines_efficient, EdigeoDir};
+use edigeo::{
+    error::{self, EdigeoResult},
+    header::ValueFormat,
+    read_lines_efficient, EdigeoDir,
+};
 use std::str::FromStr;
 
 fn main() {
@@ -7,17 +11,19 @@ fn main() {
 
     let e = EdigeoDir::extract_files(dir);
 
+    let x = "X";
+    let y = x.parse::<ValueFormat>().unwrap();
     // println!("{:#?}", &e);
 
-    if let Ok(lines) = read_lines_efficient(e.thf) {
-        for line in lines {
-            println!("{:?}", line);
-            if !line.is_empty() {
-                let data = Line::parse_line(&line);
-                println!("{:?}", data);
-            }
-        }
-    }
+    // if let Ok(lines) = read_lines_efficient(e.thf) {
+    //     for line in lines {
+    //         println!("{:?}", line);
+    //         if !line.is_empty() {
+    //             let data = Line::parse_line(&line);
+    //             println!("{:?}", data);
+    //         }
+    //     }
+    // }
 }
 
 #[derive(Debug, Clone)]
@@ -60,13 +66,11 @@ pub struct Header {
 }
 
 impl Header {
-    pub fn parse_header(line: &str) -> Self {
+    pub fn parse_header(line: &str) -> EdigeoResult<Self> {
         let value_type = line[3..4]
             .parse::<NatureField>()
             .expect("Error parsing NatureField");
-        let value_format = line[4..5]
-            .parse::<FormatField>()
-            .expect("Error parsing FormatField");
+        let value_format = line[4..5].parse::<FormatField>()?;
         Self {
             code: line[0..3].to_string(),
             value_type,
@@ -101,8 +105,8 @@ pub enum FormatField {
 }
 
 impl FromStr for FormatField {
-    type Err = String;
-    fn from_str(input: &str) -> Result<Self, Self::Err> {
+    type Err = error::EdigeoError;
+    fn from_str(input: &str) -> error::EdigeoResult<Self> {
         match input {
             "A" => Ok(FormatField::A),
             "C" => Ok(FormatField::C),
@@ -114,7 +118,7 @@ impl FromStr for FormatField {
             "R" => Ok(FormatField::R),
             "T" => Ok(FormatField::T),
             " " => Ok(FormatField::WhiteSpace),
-            _ => Err(format!("Invalid Character for FormatField: {}", input)),
+            _ => Err(error::EdigeoError::InvalidFormat(input.to_string())),
         }
     }
 }
