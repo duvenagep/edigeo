@@ -1,8 +1,8 @@
 //! Contains Edigeo file parse formatters using the [`FormatParser`] trait.
 use crate::header::*;
 
-/// FormatResult Enum with variants being the Dtypes of the parsed values
-#[derive(Debug, Clone)]
+/// FormatResult Enum with variants being the DTypes of the parsed values
+#[derive(Debug, Clone, PartialEq)]
 pub enum FormatResult {
     /// Floating point number as result type
     Float(f64),

@@ -102,6 +102,7 @@ impl EdigeoDir {
         }
         names
     }
+
     /// Efficient txt file reader that passes ownership to File::open() which uses a BufReader thus reducing
     /// internal allocations. The internal bytes are decoded using `WINDOWS_1252` encoding (Latin1)
     pub fn read_lines_efficient<P>(path: P) -> io::Result<Vec<String>>
@@ -115,8 +116,8 @@ impl EdigeoDir {
         let lines = io::BufReader::new(rdr)
             .lines()
             .map(|l| l.unwrap())
+            .filter(|l| !l.is_empty())
             .collect::<Vec<String>>();
         Ok(lines)
-        // Ok(io::BufReader::new(rdr).lines())
     }
 }
