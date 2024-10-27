@@ -9,8 +9,9 @@ fn main() {
 
     // println!("{:#?}", &e);
 
-    if let Ok(lines) = read_lines_efficient(e.t1) {
+    if let Ok(lines) = read_lines_efficient(e.thf) {
         for line in lines {
+            println!("{:?}", line);
             if !line.is_empty() {
                 let data = Line::parse_line(&line);
                 println!("{:?}", data);

@@ -1,4 +1,4 @@
-// #![warn(missing_docs)]
+#![warn(missing_docs)]
 //! # [`EDIGéO`](https://www.data.gouv.fr/s/resources/plan-cadastral-informatise/20170906-150737/standard_edigeo_2013.pdf) Exchange Format
 //!
 //! The EDIGéO (Electronic Data Interchange in the field of Geographic Information) format was established

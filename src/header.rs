@@ -1,15 +1,30 @@
+//! Contains Edigeo file [`Header`] definition & logic..
+
 use std::str::FromStr;
 
-/// `Header` struct that is used to parse the `Line` headers
+/// Represents a parsed header in an Edigeo `Line`.
+///
+/// Stores metadata about a header, including code, data type, format, and size.
 #[derive(Debug, Clone)]
 pub struct Header {
+    /// Identifier code for the header.
     pub code: String,
+
+    /// Data type of the header's value.
     pub value_type: ValueType,
+
+    /// Format of the header's value.
     pub value_format: ValueFormat,
+
+    /// Size of the value in bytes.
     pub value_size: usize,
 }
 
 impl Header {
+    /// Parses a header line into a `Header` struct.
+    ///
+    /// Extracts the header code, value type, format, and size from specified
+    /// byte positions in the line.
     pub fn parse_header(line: &str) -> Self {
         let code = parse_code(line);
         let value_type = parse_value_type(line);
@@ -24,29 +39,55 @@ impl Header {
     }
 }
 
-/// `Edigeo` header consists on 8 bytes. The first 3 bytes of the header is
-/// the header code for example `RIY`.
+/// Parses the first 3 bytes of a header line to extract the header code.
+///
+/// Example:  `RTYSA03:GTS` -> `RIY`.
+///
+/// # Panics
+/// Panics if the input does not contain a colon (`:`).
 pub fn parse_code(line: &str) -> String {
     assert!(line.contains(":"), "Input str not of valid form");
     line[0..3].to_string()
 }
 
+/// Parses the value type from the 4th byte of the header line.
+///
+/// Example:  `RTYSA03:GTS` -> `S`.
+///
+/// # Panics
+/// Panics if parsing `ValueType` fails.
 pub fn parse_value_type(line: &str) -> ValueType {
+    assert!(line.contains(":"), "Input str not of valid form");
     line[3..4]
         .parse::<ValueType>()
         .expect("Error parsing ValueType")
 }
 
+/// Parses the value format from the 5th byte of the header line.
+///
+/// Example:  `RTYSA03:GTS` -> `A`.
+///
+/// # Panics
+/// Panics if parsing `ValueFormat` fails.
 pub fn parse_value_format(line: &str) -> ValueFormat {
+    assert!(line.contains(":"), "Input str not of valid form");
     line[4..5]
         .parse::<ValueFormat>()
         .expect("Error parsing ValueFormat")
 }
 
+/// Parses the value size from the 6th and 7th bytes of the header line.
+///
+/// Example:  `RTYSA03:GTS` -> `3`.
+///
+/// # Panics
+/// Panics if parsing `usize` fails.
 pub fn parse_value_size(line: &str) -> usize {
+    assert!(line.contains(":"), "Input str not of valid form");
     line[5..7].parse::<usize>().unwrap()
 }
 
+/// Specifies the format of a value in an Edigeo header.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ValueFormat {
     /// String of Characters
@@ -90,6 +131,7 @@ impl FromStr for ValueFormat {
     }
 }
 
+/// Specifies the type of a value in an Edigeo header.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ValueType {
     /// reserved logical record
