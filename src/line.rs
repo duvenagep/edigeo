@@ -24,7 +24,7 @@ impl Line {
     /// is processed to obtain a parsed value.
     pub fn parse_line(line: &str) -> Self {
         let (header, raw_value) = line.split_once(":").unwrap();
-        let header = Header::parse_header(&header).unwrap();
+        let header = Header::parse_header(header).unwrap();
         Self {
             header: header.clone(),
             raw_value: raw_value.to_string(),
@@ -44,7 +44,5 @@ pub fn parse_value(header: Header, raw_value: &str) -> Option<FormatResult> {
     }
 
     let parser = get_parser(header);
-    let parsed_value = parser.parse(raw_value);
-
-    parsed_value
+    parser.parse(raw_value)
 }
