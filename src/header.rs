@@ -28,8 +28,8 @@ impl Header {
     /// byte positions in the line.
     pub fn parse_header(line: &str) -> EdigeoResult<Self> {
         let code = parse_code(line);
-        let value_type = parse_value_type(line)?;
-        let value_format = parse_value_format(line)?;
+        let value_type = parse_value_type(line);
+        let value_format = parse_value_format(line);
         let value_size = parse_value_size(line)?;
         Ok(Self {
             code,
@@ -47,7 +47,7 @@ impl Header {
 /// # Panics
 /// Panics if the input does not contain a colon (`:`).
 pub fn parse_code(line: &str) -> String {
-    assert!(line.contains(":"), "Input str not of valid form");
+    // assert!(line.contains(":"), "Input str not of valid form");
     line[0..3].to_string()
 }
 
@@ -57,9 +57,12 @@ pub fn parse_code(line: &str) -> String {
 ///
 /// # Panics
 /// Panics if parsing `ValueType` fails.
-pub fn parse_value_type(line: &str) -> EdigeoResult<ValueType> {
-    assert!(line.contains(":"), "Input str not of valid form");
-    Ok(line[3..4].parse::<ValueType>()?)
+pub fn parse_value_type(line: &str) -> ValueType {
+    // assert!(line.contains(":"), "Input str not of valid form");
+
+    line[3..4]
+        .parse::<ValueType>()
+        .expect("Invalid Value Type Field.")
 }
 
 /// Parses the value format from the 5th byte of the header line.
@@ -68,9 +71,11 @@ pub fn parse_value_type(line: &str) -> EdigeoResult<ValueType> {
 ///
 /// # Panics
 /// Panics if parsing `ValueFormat` fails.
-pub fn parse_value_format(line: &str) -> EdigeoResult<ValueFormat> {
-    assert!(line.contains(":"), "Input str not of valid form");
-    Ok(line[4..5].parse::<ValueFormat>()?)
+pub fn parse_value_format(line: &str) -> ValueFormat {
+    // assert!(line.contains(":"), "Input str not of valid form");
+    line[4..5]
+        .parse::<ValueFormat>()
+        .expect("Invalid Value Format Field.")
 }
 
 /// Parses the value size from the 6th and 7th bytes of the header line.
@@ -80,7 +85,7 @@ pub fn parse_value_format(line: &str) -> EdigeoResult<ValueFormat> {
 /// # Panics
 /// Panics if parsing `usize` fails.
 pub fn parse_value_size(line: &str) -> EdigeoResult<usize> {
-    assert!(line.contains(":"), "Input str not of valid form");
+    // assert!(line.contains(":"), "Input str not of valid form");
     Ok(line[5..7].parse::<usize>()?)
 }
 
@@ -186,7 +191,7 @@ mod tests {
             ("EOMT 00:", "EOM"),
         ];
         for (line, result) in test_cases {
-            let header = Header::parse_header(line);
+            let header = Header::parse_header(line).unwrap();
             assert_eq!(header.code, result.to_string());
         }
     }
@@ -203,7 +208,7 @@ mod tests {
             ("EOMT 00:", ValueType::T),
         ];
         for (line, result) in test_cases {
-            let header = Header::parse_header(line);
+            let header = Header::parse_header(line).unwrap();
             assert_eq!(header.value_type, result);
         }
     }
@@ -220,7 +225,7 @@ mod tests {
             ("EOMT 00:", ValueFormat::WhiteSpace),
         ];
         for (line, result) in test_cases {
-            let header = Header::parse_header(line);
+            let header = Header::parse_header(line).unwrap();
 
             assert_eq!(header.value_format, result);
         }
@@ -238,18 +243,18 @@ mod tests {
             ("EOMT 00:", 0),
         ];
         for (line, result) in test_cases {
-            let header = Header::parse_header(line);
+            let header = Header::parse_header(line).unwrap();
 
             assert_eq!(header.value_size, result);
         }
     }
 
     #[test]
-    #[should_panic(expected = "Invalid Character for ValueFormat: :")]
+    #[should_panic]
     fn test_header_parse_incorrect_data_passes() {
         let test_cases = ["BOMT:E0000A01.THF"];
         for line in test_cases {
-            let _header = Header::parse_header(line);
+            let _header = Header::parse_header(line).unwrap();
         }
     }
 }

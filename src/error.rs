@@ -13,7 +13,7 @@ pub enum EdigeoError {
     #[error("UTF-8 Error {0}")]
     Utf8Error(std::str::Utf8Error),
     /// Represents an invalid format field input.
-    #[error("Invalid format field: {0}")]
+    #[error("Invalid Character for ValueFormat: {0}")]
     InvalidFormat(String),
     /// ParseIntError converting from 03 -> 3
     #[error("ParseInt Error {0}")]
