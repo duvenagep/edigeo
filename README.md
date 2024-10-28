@@ -1,3 +1,11 @@
+<div align="center">
+  <a href= "https://cadastre.data.gouv.fr/static/images/logos/cadastre.data.gouv.fr.svg">
+  <img src="https://cadastre.data.gouv.fr/static/images/logos/cadastre.data.gouv.fr.svg">
+  </>
+</div>
+
+![example workflow](https://github.com/duvenagep/edigeo/blob/main/.github/workflows/ci.yaml/badge.svg)
+
 # EDIGéO Exchange Format
 
 The [`EDIGéO`](https://www.data.gouv.fr/s/resources/plan-cadastral-informatise/20170906-150737/standard_edigeo_2013.pdf) (_Electronic Data Interchange in the field of Geographic Information_) format was established
