@@ -6,7 +6,7 @@ use std::str::FromStr;
 /// Represents a parsed header in an Edigeo `Line`.
 ///
 /// Stores metadata about a header, including code, data type, format, and size.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Header {
     /// Identifier code for the header.
     pub code: String,
