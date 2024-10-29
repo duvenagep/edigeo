@@ -1,10 +1,10 @@
 <div align="center">
-  <a href= "https://cadastre.data.gouv.fr/static/images/logos/cadastre.data.gouv.fr.svg">
+  <a href= "https://cadastre.data.gouv.fr/datasets/plan-cadastral-informatise">
   <img src="https://cadastre.data.gouv.fr/static/images/logos/cadastre.data.gouv.fr.svg">
   </>
 </div>
 
-![ci](https://github.com/duvenagep/edigeo/actions/workflows/ci.yml/badge.svg)
+![ci](https://github.com/duvenagep/edigeo/actions/workflows/main.yml/badge.svg)
 
 # EDIGéO Exchange Format
 
