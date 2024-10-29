@@ -4,7 +4,7 @@
   </>
 </div>
 
-![ci](https://github.com/duvenagep/edigeo/actions/workflows/main.yml/badge.svg)
+![ci](https://github.com/duvenagep/edigeo/actions/workflows/main.yaml/badge.svg)
 
 # EDIGéO Exchange Format
 
