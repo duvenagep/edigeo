@@ -1,17 +1,17 @@
-<div align="center">
+<h1 align="center">
   <a href= "https://cadastre.data.gouv.fr/datasets/plan-cadastral-informatise">
   <img src="https://cadastre.data.gouv.fr/static/images/logos/cadastre.data.gouv.fr.svg">
   </a>
-</div>
+</h1>
 
-<div align="center">
+
 ![ci](https://github.com/duvenagep/edigeo/actions/workflows/main.yaml/badge.svg)
-</div>
+
 
 # EDIGéO Exchange Format
 
 The [`EDIGéO`](https://www.data.gouv.fr/s/resources/plan-cadastral-informatise/20170906-150737/standard_edigeo_2013.pdf) (_Electronic Data Interchange in the field of Geographic Information_) format was established
-by the French standards association (AFNOR). EDIGéO is a standardized format commonly used in France for
+by the French standards association (**AFNOR**). EDIGéO is a standardized format commonly used in France for
 the exchange of geographical information.
 
 The top-level data structure for an EDIGéO dataset is the exchange. An exchange appears as a single .THF file.
@@ -21,4 +21,8 @@ self-contained. Therefore, opening an exchange file with multiple lots is concep
 several exchange files each having one lot.
 
 An EDIGéO lot is described in several plain text files. These files are listed below:
-`.GEN` - General Information
+* `.GEO` - General Information
+* `.THF` - General Information
+* `.QAL` - General Information
+* `.GEN` - General Information
+* `.VEC` - General Information
