@@ -21,8 +21,14 @@ self-contained. Therefore, opening an exchange file with multiple lots is concep
 several exchange files each having one lot.
 
 An EDIGéO lot is described in several plain text files. These files are listed below:
-* `.GEO` - General Information
-* `.THF` - General Information
-* `.QAL` - General Information
-* `.GEN` - General Information
-* `.VEC` - General Information
+* `.THF` - a single batch of general data specific to the transmission (.THF extension, 1 per exchange)
+* `.GEN` - contains general data indicating the structure and geographical extent of the data (one
+per set)
+* `.GEO` - contains the coordinate reference (example: one of the 9 conforming conic zones, one per set)
+* `.QAL` - provides quality information (0 or 1 per set)
+* `.DIC` - defines the nomenclature of objects, attributes and relationships (1 per set is mandatory
+if there is at least one VEC file)
+* `.SCD` - defines the conceptual data schema (1 per set is mandatory if there is at least one VEC file)
+* `.MAT` - contains raster geographic data (0 or N per set; in the PCI/EDIGéO exchange, N = 0)
+* `.VEC` - contains vector geographic data (0 or N per set; in the PCI/EDIGéO
+exchange, N = 4)
