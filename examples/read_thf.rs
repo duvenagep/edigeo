@@ -8,14 +8,14 @@ fn main() {
 
     let e = EdigeoDir::extract_files(dir);
 
-    if let Ok(lines) = EdigeoDir::read_lines_efficient(e.thf) {
-        let pf = parse_blocks(lines);
-        println!("{:#?}", pf);
-        // for line in lines {
-        //     println!("{line}");
-        //     let data = Line::parse_line(&line);
-        //     println!("{:?}", data);
-        // }
+    if let Ok(lines) = EdigeoDir::read_lines_efficient(e.geo) {
+        // let pf = parse_blocks(lines);
+        // println!("{:#?}", pf);
+        for line in lines {
+            // println!("{line}");
+            let data = Line::parse_line(&line);
+            println!("{:?}", data);
+        }
     }
 
     let elapsed = now.elapsed();
@@ -34,7 +34,12 @@ pub enum BlockTypes {
     FEA,
     LNK,
     PNO,
+    PAR,
+    PFE,
+    GEO,
+    QUP,
 }
+
 #[derive(Debug)]
 struct ParsedFile {
     support_block: Option<Block>,
