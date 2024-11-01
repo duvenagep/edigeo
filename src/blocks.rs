@@ -13,6 +13,7 @@ pub enum BlockTypes {
 
 #[derive(Debug)]
 struct Block {
+    id: String,
     block_type: BlockTypes,
     entries: Vec<Line>,
 }

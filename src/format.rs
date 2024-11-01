@@ -94,7 +94,7 @@ impl FormatParser for DescriptorParser {
 ///
 /// This function selects an appropriate `FormatParser` implementation
 /// based on the `value_format` and `value_type` fields of the header.
-pub fn get_parser(header: Header) -> Box<dyn FormatParser> {
+pub fn get_parser(header: &Header) -> Box<dyn FormatParser> {
     match header.value_format {
         ValueFormat::A => Box::new(TextParser),
         ValueFormat::C | ValueFormat::R => Box::new(FloatParser),

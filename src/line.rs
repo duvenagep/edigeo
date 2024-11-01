@@ -23,12 +23,12 @@ impl Line {
     /// The header is parsed into a `Header` struct, and the raw value
     /// is processed to obtain a parsed value.
     pub fn parse_line(line: &str) -> Self {
-        let (header, raw_value) = line.split_once(":").unwrap();
-        let header = Header::parse_header(header).unwrap();
+        let (head, raw_value) = line.split_once(":").unwrap();
+        let header = Header::parse_header(head).unwrap();
         Self {
             header: header.clone(),
             raw_value: raw_value.to_string(),
-            parsed_value: parse_value(header, raw_value),
+            parsed_value: parse_value(&header, raw_value),
         }
     }
 }
@@ -38,7 +38,7 @@ impl Line {
 /// Returns an `Option<FormatResult>`. If the raw value size does not match
 /// the expected size from the header, it panics. Otherwise, it uses a parser
 /// specific to the header to parse the value.
-pub fn parse_value(header: Header, raw_value: &str) -> Option<FormatResult> {
+pub fn parse_value(header: &Header, raw_value: &str) -> Option<FormatResult> {
     if header.value_size != raw_value.chars().count() {
         panic!("value size mismatch!");
     }
@@ -56,9 +56,7 @@ mod tests {
         let test_cases = [("BOMT 12:E0000A01.THF", "E0000A01.THF", None)];
         for (line, raw_value, result) in test_cases {
             let header = Header::parse_header(line).unwrap();
-            let parsed_value = parse_value(header.clone(), raw_value);
-            println!("{:?}", &header);
-            println!("{:?}", parsed_value);
+            let parsed_value = parse_value(&header, raw_value);
             assert_eq!(result, parsed_value);
         }
     }
@@ -73,9 +71,7 @@ mod tests {
         )];
         for (line, raw_value, result) in test_cases {
             let header = Header::parse_header(line).unwrap();
-            let parsed_value = parse_value(header.clone(), raw_value);
-            println!("{:?}", &header);
-            println!("{:?}", parsed_value);
+            let parsed_value = parse_value(&header, raw_value);
             assert_eq!(result, parsed_value);
         }
     }

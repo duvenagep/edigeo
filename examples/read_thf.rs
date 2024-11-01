@@ -8,13 +8,13 @@ fn main() {
 
     let e = EdigeoDir::extract_files(dir);
 
-    if let Ok(lines) = EdigeoDir::read_lines_efficient(e.geo) {
+    if let Ok(lines) = EdigeoDir::read_lines_efficient(e.thf) {
         // let pf = parse_blocks(lines);
         // println!("{:#?}", pf);
         for line in lines {
-            // println!("{line}");
-            let data = Line::parse_line(&line);
-            println!("{:?}", data);
+            println!("{line}");
+            // let data = Line::parse_line(&line);
+            // println!("{:?}", data);
         }
     }
 
