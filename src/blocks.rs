@@ -11,6 +11,10 @@ pub enum BlockTypes {
     QUP,
 }
 
+pub trait ParseBlock {
+    fn parse_block(&self);
+}
+
 #[derive(Debug)]
 struct Block {
     id: String,

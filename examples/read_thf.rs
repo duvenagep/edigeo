@@ -9,35 +9,17 @@ fn main() {
     let e = EdigeoDir::extract_files(dir);
 
     if let Ok(lines) = EdigeoDir::read_lines_efficient(e.thf) {
-        // let pf = parse_blocks(lines);
-        // println!("{:#?}", pf);
-        for line in lines {
-            println!("{line}");
-            // let data = Line::parse_line(&line);
-            // println!("{:?}", data);
-        }
+        let pf = parse_blocks(lines);
+        println!("{:#?}", pf);
+        // for line in lines {
+        //     // println!("{line}");
+        //     let data = Line::parse_line(&line);
+        //     println!("{:?}", data);
+        // }
     }
 
     let elapsed = now.elapsed();
     println!("Elapsed: {elapsed:.4?}");
-}
-
-// pub struct THFFile {
-//     pub head: String,
-//     pub charset: String,
-//     pub support: Block,
-//     pub batch: Block,
-//     pub eof: String,
-// }
-
-pub enum BlockTypes {
-    FEA,
-    LNK,
-    PNO,
-    PAR,
-    PFE,
-    GEO,
-    QUP,
 }
 
 #[derive(Debug)]

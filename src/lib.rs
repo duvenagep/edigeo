@@ -13,7 +13,7 @@
 //!
 //! An EDIGéO lot is described in several plain text files. These files are listed below:
 //! `.GEN` - General Information
-// pub mod blocks;
+pub mod blocks;
 pub mod directory;
 pub mod error;
 pub mod format;
@@ -22,5 +22,5 @@ pub mod line;
 
 pub use directory::*;
 pub use format::*;
-pub use header::{Header, ValueFormat, ValueType};
+pub use header::*;
 pub use line::*;

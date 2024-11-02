@@ -1,5 +1,4 @@
 //! Contains all logic for processing [`EDIGéO`] files from directories, such as [`EdigeoDir`].
-
 use std::{
     fs::{self},
     io::{self, BufRead},
