@@ -4,7 +4,9 @@ use std::time::Instant;
 fn main() {
     let now = Instant::now();
 
+    let file = "data/edigeo-740240000A01/E0000A01.THF";
     let dir = "data/edigeo-740240000A01/";
+    let tar = "data/edigeo-740240000A01.tar.bz2";
 
     let e = EdigeoDir::extract_files(dir);
 
