@@ -1,4 +1,6 @@
+use bzip2::read::BzDecoder;
 use edigeo::*;
+
 use reader::Reader;
 use std::{fs::File, io::Read, path::Path, time::Instant};
 use tar::Archive;
@@ -25,8 +27,34 @@ fn main() {
     //     // }
     // }
 
+    // let e = EdigeoDir::extract_files(dir);
+
+    // if let Ok(lines) = EdigeoDir::read_lines_efficient(e.thf) {
+    //     let pf = parse_blocks(lines);
+    //     println!("{:#?}", pf);
+    //     // for line in lines {
+    //     //     // println!("{line}");
+    //     //     let data = Line::parse_line(&line);
+    //     //     println!("{:?}", data);
+    //     // }
+    // }
+
     let elapsed = now.elapsed();
     println!("Elapsed: {elapsed:.4?}");
+}
+
+fn read<P: AsRef<Path>>(path: P) {
+    let path = path.as_ref();
+
+    if path.is_dir() {
+        todo!()
+    } else if path.is_file() && path.ends_with(".THF") {
+        let dir = path.parent().unwrap();
+
+        todo!()
+    } else if path.is_file() && path.ends_with(".tar.bz2") {
+        todo!()
+    }
 }
 
 #[derive(Debug)]
