@@ -1,20 +1,18 @@
-use bzip2::read::BzDecoder;
 use edigeo::*;
 
-use reader::Reader;
-use std::{fs::File, io::Read, path::Path, time::Instant};
-use tar::Archive;
+use std::{path::Path, time::Instant};
 
 fn main() {
     let now = Instant::now();
 
-    let file = "data/edigeo-740240000A01/E0000A01.THF";
-    let dir = "data/edigeo-740240000A01/";
+    let _file = "data/edigeo-740240000A01/E0000A01.THF";
+    let _dir = "data/edigeo-740240000A01/";
     let tar = "data/edigeo-740240000A01.tar.bz2";
 
-    let reader = Reader::new(tar);
+    let reader = EdigeoReader::new(tar);
     let data = reader.reader.read_bundle();
-    println!("{:?}", data.thf);
+    println!("{}", decode_file(&data.dic.unwrap()));
+
     // let e = EdigeoDir::extract_files(dir);
 
     // if let Ok(lines) = EdigeoDir::read_lines_efficient(e.thf) {
@@ -41,20 +39,6 @@ fn main() {
 
     let elapsed = now.elapsed();
     println!("Elapsed: {elapsed:.4?}");
-}
-
-fn read<P: AsRef<Path>>(path: P) {
-    let path = path.as_ref();
-
-    if path.is_dir() {
-        todo!()
-    } else if path.is_file() && path.ends_with(".THF") {
-        let dir = path.parent().unwrap();
-
-        todo!()
-    } else if path.is_file() && path.ends_with(".tar.bz2") {
-        todo!()
-    }
 }
 
 #[derive(Debug)]
