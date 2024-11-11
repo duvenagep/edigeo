@@ -1,12 +1,19 @@
+//! Contains all logic for processing [`EDIGéO`] files from directories, such as [`EdigeoDir`].
+use bzip2::read::BzDecoder;
+use encoding_rs::WINDOWS_1252;
+use encoding_rs_io::{DecodeReaderBytes, DecodeReaderBytesBuilder};
 use std::{
     fs::File,
     io::Read,
     path::{Path, PathBuf},
 };
-
-use bzip2::read::BzDecoder;
 use tar::Archive;
 
+/// Represents a collections of Edigeo files for various file types.
+///
+/// This struct is designed to hold the data of each component
+/// required for Edigeo data processing. Some files are mandatory, while
+/// others are optional, depending on the context of usage.
 #[derive(Debug, Default)]
 pub struct EdigeoBundle {
     /// Path to the .thf file, containing metadata for Edigeo.
@@ -32,6 +39,8 @@ pub struct EdigeoBundle {
 }
 
 impl EdigeoBundle {
+    /// An [`EdigeoBundle`] completeness check. Check if all mandatory files are present in the
+    /// exchange
     pub fn is_completed(&self) -> bool {
         !&self.thf.is_empty()
             && !&self.geo.is_empty()
@@ -41,20 +50,39 @@ impl EdigeoBundle {
             && !&self.s1.is_empty()
             && !&self.qal.is_empty()
     }
+
+    /// Raw `Bytes` are encoded in `Latin1 (WINDOWS_1252)` and are decoded to
+    /// `UTF-8` bytes
+    pub fn decode_file(&self, data: &[u8]) -> String {
+        let (cow, _encoding_used, had_errors) = WINDOWS_1252.decode(data);
+        if had_errors {
+            eprintln!("Warning: Encoding errors occurred");
+        }
+        cow.into_owned()
+    }
 }
 
-pub trait EdigeoReader {
+/// The [`ExchangeReader`] Trait used for reading the [`EdigeoBundle`] from various sources
+/// namely:
+/// - `.thf` file
+/// - `.tar.bz2` compressed file
+/// - `directory` where .thf file is located
+pub trait ExchangeReader {
+    /// Reads each of the mandatory files and builds a [`EdigeoBundle`] struct.
     fn read_bundle(&self) -> EdigeoBundle;
 }
 
+/// Tar file `.tar.bz2` is the most common exchange format for Edigeo
 pub struct TarReader {
     path: PathBuf,
 }
 
+/// The directory where the main `.THF` file is located
 pub struct DirReader {
     path: PathBuf,
 }
 
+/// The main `.THF` file reader
 pub struct THFReader {
     path: PathBuf,
 }
@@ -83,7 +111,7 @@ impl THFReader {
     }
 }
 
-impl EdigeoReader for TarReader {
+impl ExchangeReader for TarReader {
     fn read_bundle(&self) -> EdigeoBundle {
         let file = std::fs::File::open(&self.path).unwrap();
         let bz2_decoder = BzDecoder::new(file);
@@ -108,22 +136,25 @@ impl EdigeoReader for TarReader {
 
             entry.read_to_end(target).unwrap();
         }
+
         if !bundle.is_completed() {
             panic!("All necesssary EIDGéO files not present.");
         }
+
         bundle
     }
 }
 
-impl EdigeoReader for DirReader {
+impl ExchangeReader for DirReader {
     fn read_bundle(&self) -> EdigeoBundle {
         if self.path.is_file() {
             panic!("Expected Dir Path");
         }
+
         let mut bundle = EdigeoBundle::default();
 
         for entry in self.path.read_dir().unwrap() {
-            let mut entry = entry.unwrap();
+            let entry = entry.unwrap();
             let path = entry.path();
             let path_str = &path.to_string_lossy();
             let mut file = File::open(&path).unwrap();
@@ -141,11 +172,15 @@ impl EdigeoReader for DirReader {
             file.read_to_end(target).unwrap();
         }
 
+        if !bundle.is_completed() {
+            panic!("All necesssary EIDGéO files not present.");
+        }
+
         bundle
     }
 }
 
-impl EdigeoReader for THFReader {
+impl ExchangeReader for THFReader {
     fn read_bundle(&self) -> EdigeoBundle {
         let dir = self.path.parent().unwrap();
         let dir_reader = DirReader::new(dir);
@@ -153,15 +188,15 @@ impl EdigeoReader for THFReader {
     }
 }
 
-pub struct Reader {
-    pub reader: Box<dyn EdigeoReader>,
+pub struct EdigeoReader {
+    pub reader: Box<dyn ExchangeReader>,
 }
 
-impl Reader {
+impl EdigeoReader {
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         let path = path.as_ref().to_owned();
 
-        let reader: Box<dyn EdigeoReader> = match path.is_dir() {
+        let reader: Box<dyn ExchangeReader> = match path.is_dir() {
             true => Box::new(DirReader::new(path)),
             false => match path.extension().and_then(|ext| ext.to_str()) {
                 Some("bz2") => Box::new(TarReader::new(path)),
@@ -191,7 +226,7 @@ impl Reader {
         }
     }
 
-    pub fn into_inner(&self) -> &Box<dyn EdigeoReader> {
+    pub fn into_inner(&self) -> &Box<dyn ExchangeReader> {
         &self.reader
     }
 }

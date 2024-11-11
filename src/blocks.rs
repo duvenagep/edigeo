@@ -12,7 +12,12 @@ pub enum BlockTypes {
 }
 
 pub trait ParseBlock {
-    fn parse_block(&self);
+    fn parse_block(&self) -> Self;
+}
+
+pub struct THFFile {
+    data: Vec<u8>,
+    blocks: Vec<Block>,
 }
 
 #[derive(Debug)]
