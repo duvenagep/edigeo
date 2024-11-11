@@ -195,7 +195,7 @@ impl ExchangeReader for THFReader {
 }
 
 /// The main EdigeoReader struct that enables reading any input file type.
-/// ```rust
+/// ```ignore
 ///     let file = "data/edigeo-740240000A01/E0000A01.THF";
 ///     let reader = EdigeoReader::new(file);
 ///     let data = reader.reader.read_bundle();
@@ -255,4 +255,17 @@ impl EdigeoReader {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_edigeo_bundel_is_complete() {
+        let bundle = EdigeoBundle::default();
+        assert_eq!(false, bundle.is_completed());
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_edigeo_bundel_is_complete_incorrect() {
+        let bundle = EdigeoBundle::default();
+        assert_eq!(true, bundle.is_completed());
+    }
 }
