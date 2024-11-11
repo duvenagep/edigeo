@@ -1,7 +1,6 @@
 //! Contains all logic for processing [`EDIGéO`] files from directories, such as [`EdigeoDir`].
 use bzip2::read::BzDecoder;
 use encoding_rs::WINDOWS_1252;
-use encoding_rs_io::{DecodeReaderBytes, DecodeReaderBytesBuilder};
 use std::{
     fs::File,
     io::Read,
@@ -50,16 +49,16 @@ impl EdigeoBundle {
             && !&self.s1.is_empty()
             && !&self.qal.is_empty()
     }
+}
 
-    /// Raw `Bytes` are encoded in `Latin1 (WINDOWS_1252)` and are decoded to
-    /// `UTF-8` bytes
-    pub fn decode_file(&self, data: &[u8]) -> String {
-        let (cow, _encoding_used, had_errors) = WINDOWS_1252.decode(data);
-        if had_errors {
-            eprintln!("Warning: Encoding errors occurred");
-        }
-        cow.into_owned()
+/// Raw `Bytes` are encoded in `Latin1 (WINDOWS_1252)` and are decoded to
+/// `UTF-8` bytes
+pub fn decode_file(data: &[u8]) -> String {
+    let (cow, _encoding_used, had_errors) = WINDOWS_1252.decode(data);
+    if had_errors {
+        eprintln!("Warning: Encoding errors occurred");
     }
+    cow.into_owned()
 }
 
 /// The [`ExchangeReader`] Trait used for reading the [`EdigeoBundle`] from various sources
@@ -88,6 +87,7 @@ pub struct THFReader {
 }
 
 impl TarReader {
+    /// Constructor method for creating a new [`TarReader`].
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         Self {
             path: path.as_ref().to_owned(),
@@ -96,6 +96,7 @@ impl TarReader {
 }
 
 impl DirReader {
+    /// Constructor method for creating a new [`DirReader`].
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         Self {
             path: path.as_ref().to_owned(),
@@ -104,6 +105,7 @@ impl DirReader {
 }
 
 impl THFReader {
+    /// Constructor method for creating a new [`THFReader`].
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         Self {
             path: path.as_ref().to_owned(),
@@ -131,6 +133,9 @@ impl ExchangeReader for TarReader {
                 p if p.ends_with("T3.VEC") => &mut bundle.t3,
                 p if p.ends_with("S1.VEC") => &mut bundle.s1,
                 p if p.ends_with(".QAL") => &mut bundle.qal,
+                p if p.ends_with(".DIC") => &mut bundle.dic.get_or_insert(Vec::new()),
+                p if p.ends_with(".GEN") => &mut bundle.gen.get_or_insert(Vec::new()),
+                p if p.ends_with(".SCD") => &mut bundle.scd.get_or_insert(Vec::new()),
                 _ => continue,
             };
 
@@ -140,7 +145,6 @@ impl ExchangeReader for TarReader {
         if !bundle.is_completed() {
             panic!("All necesssary EIDGéO files not present.");
         }
-
         bundle
     }
 }
@@ -167,6 +171,9 @@ impl ExchangeReader for DirReader {
                 p if p.ends_with("T3.VEC") => &mut bundle.t3,
                 p if p.ends_with("S1.VEC") => &mut bundle.s1,
                 p if p.ends_with(".QAL") => &mut bundle.qal,
+                p if p.ends_with(".DIC") => &mut bundle.dic.get_or_insert(Vec::new()),
+                p if p.ends_with(".GEN") => &mut bundle.gen.get_or_insert(Vec::new()),
+                p if p.ends_with(".SCD") => &mut bundle.scd.get_or_insert(Vec::new()),
                 _ => continue,
             };
             file.read_to_end(target).unwrap();
@@ -175,7 +182,6 @@ impl ExchangeReader for DirReader {
         if !bundle.is_completed() {
             panic!("All necesssary EIDGéO files not present.");
         }
-
         bundle
     }
 }
@@ -188,11 +194,22 @@ impl ExchangeReader for THFReader {
     }
 }
 
+/// The main EdigeoReader struct that enables reading any input file type.
+/// ```rust
+///     let file = "data/edigeo-740240000A01/E0000A01.THF";
+///     let reader = EdigeoReader::new(file);
+///     let data = reader.reader.read_bundle();
+///
+///     println!("{}", data.decode_file(&data.thf));
+/// ```
 pub struct EdigeoReader {
+    /// Trait Object to read the [`ExchangeReader`]
     pub reader: Box<dyn ExchangeReader>,
 }
 
 impl EdigeoReader {
+    /// Constructor method to create a [`EdigeoReader`] from any object that can be
+    /// [`AsRef<Path>`] into a path.
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         let path = path.as_ref().to_owned();
 
@@ -208,25 +225,34 @@ impl EdigeoReader {
         Self { reader }
     }
 
+    /// Create a reader `with_tar` to create a TAR file reader
     pub fn with_tar<P: AsRef<Path>>(path: P) -> Self {
         Self {
             reader: Box::new(TarReader::new(path)),
         }
     }
 
+    /// Create a reader `with_thf` to create a .THF file reader
     pub fn with_thf<P: AsRef<Path>>(path: P) -> Self {
         Self {
             reader: Box::new(THFReader::new(path)),
         }
     }
 
+    /// Create a reader `with_dir` to create a Directory reader
     pub fn with_dir<P: AsRef<Path>>(path: P) -> Self {
         Self {
             reader: Box::new(DirReader::new(path)),
         }
     }
 
+    /// Returns the inner [`EdigeoExchange`] trait object
     pub fn into_inner(&self) -> &Box<dyn ExchangeReader> {
         &self.reader
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
 }

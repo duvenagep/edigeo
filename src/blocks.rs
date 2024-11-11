@@ -20,6 +20,12 @@ pub struct THFFile {
     blocks: Vec<Block>,
 }
 
+impl ParseBlock for THFFile {
+    fn parse_block(&self) -> Self {
+        todo!()
+    }
+}
+
 #[derive(Debug)]
 struct Block {
     id: String,

@@ -11,7 +11,7 @@ fn main() {
 
     let reader = EdigeoReader::new(tar);
     let data = reader.reader.read_bundle();
-    println!("{}", data.decode_file(&data.thf));
+    println!("{}", decode_file(&data.dic.unwrap()));
 
     // let e = EdigeoDir::extract_files(dir);
 
