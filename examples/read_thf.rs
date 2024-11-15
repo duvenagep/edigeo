@@ -11,7 +11,12 @@ fn main() {
 
     let reader = EdigeoReader::new(tar);
     let data = reader.reader.read_bundle();
-    println!("{}", decode_file(&data.dic.unwrap()));
+    let thf = decode_file(&data.dic.unwrap());
+    let lines: Vec<&str> = thf.lines().filter(|l| !l.is_empty()).collect();
+    for line in lines {
+        let l = Line::parse_line(&line);
+        println!("{:?}", l);
+    }
 
     // let e = EdigeoDir::extract_files(dir);
 
