@@ -2,6 +2,7 @@
 use bzip2::read::BzDecoder;
 use encoding_rs::WINDOWS_1252;
 use std::{
+    borrow::Cow,
     fs::File,
     io::Read,
     path::{Path, PathBuf},
@@ -49,16 +50,24 @@ impl EdigeoBundle {
             && !&self.s1.is_empty()
             && !&self.qal.is_empty()
     }
+
+    // pub fn decode_thf(&self) -> Cow<'_, str> {
+    //     let (cow, _encoding_used, had_errors) = WINDOWS_1252.decode(&self.thf);
+    //     if had_errors {
+    //         eprintln!("Warning: Encoding errors occurred");
+    //     }
+    //     cow
+    // }
 }
 
 /// Raw `Bytes` are encoded in `Latin1 (WINDOWS_1252)` and are decoded to
-/// `UTF-8` bytes
-pub fn decode_file(data: &[u8]) -> String {
+/// `UTF-8` strings
+pub fn decode_file(data: &[u8]) -> Cow<'_, str> {
     let (cow, _encoding_used, had_errors) = WINDOWS_1252.decode(data);
     if had_errors {
         eprintln!("Warning: Encoding errors occurred");
     }
-    cow.into_owned()
+    cow
 }
 
 /// The [`ExchangeReader`] Trait used for reading the [`EdigeoBundle`] from various sources
@@ -204,7 +213,7 @@ impl ExchangeReader for THFReader {
 /// ```
 pub struct EdigeoReader {
     /// Trait Object to read the [`ExchangeReader`]
-    pub reader: Box<dyn ExchangeReader>,
+    reader: Box<dyn ExchangeReader>,
 }
 
 impl EdigeoReader {

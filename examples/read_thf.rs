@@ -10,13 +10,15 @@ fn main() {
     let tar = "data/edigeo-740240000A01.tar.bz2";
 
     let reader = EdigeoReader::new(tar);
-    let data = reader.reader.read_bundle();
-    let thf = decode_file(&data.dic.unwrap());
+    let data = reader.into_inner().read_bundle();
+    let thf = decode_file(&data.thf);
     let lines: Vec<&str> = thf.lines().filter(|l| !l.is_empty()).collect();
-    for line in lines {
-        let l = Line::parse_line(&line);
-        println!("{:?}", l);
-    }
+    let pf = parse_blocks(lines);
+    println!("{:?}", pf);
+    // for line in lines {
+    //     let l = Line::parse_line(&line);
+    //     println!("{:?}", l);
+    // }
 
     // let e = EdigeoDir::extract_files(dir);
 
@@ -59,7 +61,7 @@ struct Block {
 }
 
 /// Parses the data and categorizes it into a support block and a batch block.
-fn parse_blocks(lines: Vec<String>) -> ParsedFile {
+fn parse_blocks(lines: Vec<&str>) -> ParsedFile {
     let mut support_block = None;
     let mut batch_block = None;
     let mut current_block = None;

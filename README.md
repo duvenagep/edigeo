@@ -32,3 +32,16 @@ if there is at least one VEC file)
 * `.MAT` - contains raster geographic data (0 or N per set; in the PCI/EDIGéO exchange, N = 0)
 * `.VEC` - contains vector geographic data (0 or N per set; in the PCI/EDIGéO
 exchange, N = 4)
+
+
+# Usage Examples
+```rust
+use edigeo::*;
+
+let reader = EdigeoReader::new("exchange_file.tar.bz2");
+let data = reader.into_inner().read_bundle();
+let thf = decode_file(&data.thf);
+let lines: Vec<&str> = thf.lines().filter(|l| !l.is_empty()).collect();
+let pf = parse_blocks(lines);
+println!("{:?}", pf);
+```
