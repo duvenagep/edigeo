@@ -52,7 +52,7 @@ impl EdigeoBundle {
 }
 
 /// Raw `Bytes` are encoded in `Latin1 (WINDOWS_1252)` and are decoded to
-/// `UTF-8` bytes
+/// `UTF-8` strings
 pub fn decode_file(data: &[u8]) -> String {
     let (cow, _encoding_used, had_errors) = WINDOWS_1252.decode(data);
     if had_errors {
@@ -204,7 +204,7 @@ impl ExchangeReader for THFReader {
 /// ```
 pub struct EdigeoReader {
     /// Trait Object to read the [`ExchangeReader`]
-    pub reader: Box<dyn ExchangeReader>,
+    reader: Box<dyn ExchangeReader>,
 }
 
 impl EdigeoReader {
