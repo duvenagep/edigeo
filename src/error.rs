@@ -23,7 +23,7 @@ pub enum EdigeoError {
     ParseFloatError(std::num::ParseFloatError),
 }
 
-/// Result Type to be used by the EDIGéO Lib
+/// Result Type to be used by the EDIGéO Exchange Crate
 pub type EdigeoResult<T> = Result<T, EdigeoError>;
 
 impl From<std::io::Error> for EdigeoError {
