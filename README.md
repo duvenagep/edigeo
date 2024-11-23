@@ -33,8 +33,38 @@ if there is at least one VEC file)
 * `.VEC` - contains vector geographic data (0 or N per set; in the PCI/EDIGéO
 exchange, N = 4)
 
+## EDIGéO Bundle
+The Edigeo exchange budle consists of the afore mentioned files however some of the files are optional.
+The following structure highlights the minimum required files that constitute a valid exchange
 
-# Usage Examples
+```rust
+pub struct EdigeoBundle {
+    /// Path to the .thf file, containing metadata for Edigeo.
+    pub thf: Vec<u8>,
+    /// Path to the .geo file, containing geographical data.
+    pub geo: Vec<u8>,
+    /// Path to the .qal file, which includes quality attributes.
+    pub qal: Vec<u8>,
+    /// Path to the .t1 file, representing type-1 information.
+    pub t1: Vec<u8>,
+    /// Path to the .t2 file, representing type-2 information.
+    pub t2: Vec<u8>,
+    /// Path to the .t3 file, representing type-3 information.
+    pub t3: Vec<u8>,
+    /// Path to the .s1 file, representing supplementary data.
+    pub s1: Vec<u8>,
+    /// Optional path to the .dic file, containing dictionary data.
+    pub dic: Option<Vec<u8>>,
+    /// Optional path to the .gen file, which includes general data.
+    pub gen: Option<Vec<u8>>,
+    /// Optional path to the .scd file, including sector code data.
+    pub scd: Option<Vec<u8>>,
+}
+```
+
+If the min required files are not present the reader should panic! and the exchange should be considered incomplete or corrupted.
+
+## Usage Examples
 ```rust
 use edigeo::*;
 
