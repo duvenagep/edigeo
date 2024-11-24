@@ -62,7 +62,7 @@ pub struct EdigeoBundle {
 }
 ```
 
-If the min required files are not present the reader should panic! and the exchange should be considered incomplete or corrupted.
+If the min required files are not present the reader should `panic!` and the exchange should be considered incomplete or corrupted.
 
 ## Usage Examples
 ```rust
