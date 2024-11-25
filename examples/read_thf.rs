@@ -10,7 +10,7 @@ fn main() {
     let tar = "data/edigeo-740240000A01.tar.bz2";
 
     let reader = EdigeoReader::new(tar);
-    let data = reader.into_inner().read_bundle();
+    let data = reader.read_bundle();
     let thf = decode_file(&data.thf);
     let lines: Vec<&str> = thf.lines().filter(|l| !l.is_empty()).collect();
     let pf = parse_blocks(lines);

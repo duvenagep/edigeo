@@ -1,10 +1,12 @@
+use std::io::Read;
+
 use edigeo::*;
 
 #[test]
 fn read_full_dir() {
     let full_dir_path = "data/edigeo-740240000A01/";
     let reader = EdigeoReader::new(full_dir_path);
-    let e = reader.into_inner().read_bundle();
+    let e = reader.read_bundle();
 
     let all_required = !e.geo.is_empty()
         && !e.qal.is_empty()
@@ -23,7 +25,7 @@ fn read_full_dir() {
 fn read_missing_dir() {
     let full_dir_path = "data/edigeo-740240000A01-missing";
     let reader = EdigeoReader::new(full_dir_path);
-    let e = reader.into_inner().read_bundle();
+    let e = reader.read_bundle();
 
     let all_required = !e.geo.is_empty()
         && !e.qal.is_empty()
@@ -40,8 +42,15 @@ fn read_missing_dir() {
 
 #[test]
 fn edigeo_read_thf() {
-    let full_dir_path = "data/edigeo-740240000A01/";
-    let e = EdigeoReader::new(full_dir_path).into_inner().read_bundle();
+    let full_dir_path = "data/edigeo-740240000A01/E0000A01.THF";
+    let e = EdigeoReader::new(full_dir_path).read_bundle();
 
-    // assert_eq!("data/edigeo-740240000A01/E0000A01.THF", e.thf);
+    let mut thf = Vec::new();
+    let file = std::fs::File::open(full_dir_path).unwrap();
+    let mut reader = std::io::BufReader::new(file);
+    reader
+        .read_to_end(&mut thf)
+        .expect("Failed to read THF from path");
+
+    assert_eq!(thf, e.thf);
 }
