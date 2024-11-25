@@ -234,6 +234,11 @@ impl EdigeoReader {
         Self { reader }
     }
 
+    /// Consumes the [`EdigeoReader`] and returns the [`EdigeoBundle`]
+    pub fn read_bundle(&self) -> EdigeoBundle {
+        self.into_inner().read_bundle()
+    }
+
     /// Create a reader `with_tar` to create a TAR file reader
     pub fn with_tar<P: AsRef<Path>>(path: P) -> Self {
         Self {
@@ -256,7 +261,7 @@ impl EdigeoReader {
     }
 
     /// Returns the inner [`EdigeoExchange`] trait object
-    pub fn into_inner(&self) -> &Box<dyn ExchangeReader> {
+    fn into_inner(&self) -> &Box<dyn ExchangeReader> {
         &self.reader
     }
 }
