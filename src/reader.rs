@@ -51,13 +51,15 @@ impl EdigeoBundle {
             && !&self.qal.is_empty()
     }
 
-    // pub fn decode_thf(&self) -> Cow<'_, str> {
-    //     let (cow, _encoding_used, had_errors) = WINDOWS_1252.decode(&self.thf);
-    //     if had_errors {
-    //         eprintln!("Warning: Encoding errors occurred");
-    //     }
-    //     cow
-    // }
+    /// Raw `Bytes` are encoded in `Latin1 (WINDOWS_1252)` and are decoded to
+    /// `UTF-8` strings
+    pub fn decode_thf(&self) -> Cow<'_, str> {
+        let (cow, _encoding_used, had_errors) = WINDOWS_1252.decode(&self.thf);
+        if had_errors {
+            eprintln!("Warning: Encoding errors occurred");
+        }
+        cow
+    }
 }
 
 /// Raw `Bytes` are encoded in `Latin1 (WINDOWS_1252)` and are decoded to
