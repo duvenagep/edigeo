@@ -1,6 +1,6 @@
 use edigeo::*;
 
-use std::{path::Path, time::Instant};
+use std::time::Instant;
 
 fn main() {
     let now = Instant::now();
