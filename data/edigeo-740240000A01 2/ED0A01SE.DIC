@@ -318,7 +318,7 @@ TEXT 06:8859-1
 AVDST10:Equipement
 AVLSA02:05
 TEXT 06:8859-1
-AVDST11:DÃ©partement
+AVDST11:Département
 AVLSA02:06
 TEXT 06:8859-1
 AVDST04:SNCF
@@ -333,10 +333,10 @@ TEXT 06:8859-1
 AVDST03:GDF
 AVLSA02:10
 TEXT 06:8859-1
-AVDST25:CollectivitÃ© territoriale
+AVDST25:Collectivité territoriale
 AVLSA02:98
 TEXT 06:8859-1
-AVDST24:Divers maÃ®tres d'ouvrage
+AVDST24:Divers maîtres d'ouvrage
 
 RTYSA03:DIA
 RIDSA13:ID_N_ATT_COAR
@@ -364,16 +364,16 @@ TEXT 06:8859-1
 AVDST11:Ancien plan
 AVLSA02:02
 TEXT 06:8859-1
-AVDST35:Plan rÃ©novÃ© par voie de mise Ã  jour
+AVDST35:Plan rénové par voie de mise à jour
 AVLSA02:03
 TEXT 06:8859-1
-AVDST38:Plan rÃ©novÃ© par voie de renouvellement
+AVDST38:Plan rénové par voie de renouvellement
 AVLSA02:04
 TEXT 06:8859-1
-AVDST33:Plan rÃ©novÃ© par voie de rÃ©fection
+AVDST33:Plan rénové par voie de réfection
 AVLSA02:05
 TEXT 06:8859-1
-AVDST12:Plan remaniÃ©
+AVDST12:Plan remanié
 AVLSA02:06
 TEXT 06:8859-1
 AVDST36:Plan obtenu par remembrement ou AFAF
@@ -426,10 +426,10 @@ UNIST00:
 AVCSN01:2
 AVLSA02:01
 TEXT 06:8859-1
-AVDST08:BÃ¢ti dur
+AVDST08:Bâti dur
 AVLSA02:02
 TEXT 06:8859-1
-AVDST10:BÃ¢ti lÃ©ger
+AVDST10:Bâti léger
 
 RTYSA03:DIA
 RIDSA12:ID_N_ATT_EOR
@@ -476,10 +476,10 @@ UNIST00:
 AVCSN01:2
 AVLSA02:01
 TEXT 06:8859-1
-AVDST24:Parcelle figurÃ©e au plan
+AVDST24:Parcelle figurée au plan
 AVLSA02:02
 TEXT 06:8859-1
-AVDST28:Parcelle non figurÃ©e au plan
+AVDST28:Parcelle non figurée au plan
 
 RTYSA03:DIA
 RIDSA12:ID_N_ATT_INP
@@ -496,13 +496,13 @@ TEXT 06:8859-1
 AVDST07:Inconnu
 AVLSA02:01
 TEXT 06:8859-1
-AVDST21:NumÃ©risation manuelle
+AVDST21:Numérisation manuelle
 AVLSA02:02
 TEXT 06:8859-1
-AVDST24:NumÃ©risation par scanner
+AVDST24:Numérisation par scanner
 AVLSA02:03
 TEXT 06:8859-1
-AVDST49:Incorporation directe sans numÃ©risation prÃ©alable
+AVDST49:Incorporation directe sans numérisation préalable
 
 RTYSA03:DIA
 RIDSA12:ID_N_ATT_MAP
@@ -519,19 +519,19 @@ TEXT 06:8859-1
 AVDST07:Inconnu
 AVLSA02:01
 TEXT 06:8859-1
-AVDST15:Non matÃ©rialisÃ©
+AVDST15:Non matérialisé
 AVLSA02:02
 TEXT 06:8859-1
-AVDST11:MatÃ©rialisÃ©
+AVDST11:Matérialisé
 AVLSA02:03
 TEXT 06:8859-1
 AVDST15:Rivet ou boulon
 AVLSA02:04
 TEXT 06:8859-1
-AVDST12:Croix gravÃ©e
+AVDST12:Croix gravée
 AVLSA02:06
 TEXT 06:8859-1
-AVDST06:PylÃ´ne
+AVDST06:Pylône
 AVLSA02:07
 TEXT 06:8859-1
 AVDST05:Borne
@@ -565,22 +565,22 @@ TEXT 06:8859-1
 AVDST07:Inconnu
 AVLSA02:01
 TEXT 06:8859-1
-AVDST48:Canevas de nivellement direct de haute prÃ©cision
+AVDST48:Canevas de nivellement direct de haute précision
 AVLSA02:02
 TEXT 06:8859-1
-AVDST42:Canevas de nivellement direct de prÃ©cision
+AVDST42:Canevas de nivellement direct de précision
 AVLSA02:03
 TEXT 06:8859-1
 AVDST39:Canevas de nivellement direct ordinaire
 AVLSA02:04
 TEXT 06:8859-1
-AVDST42:Canevas de nivellement indirect gÃ©odÃ©sique
+AVDST42:Canevas de nivellement indirect géodésique
 AVLSA02:05
 TEXT 06:8859-1
-AVDST47:Canevas de nivellement indirect trigonomÃ©trique
+AVDST47:Canevas de nivellement indirect trigonométrique
 AVLSA02:06
 TEXT 06:8859-1
-AVDST45:Cote altimÃ©trique obtenue par photogrammÃ©trie
+AVDST45:Cote altimétrique obtenue par photogrammétrie
 AVLSA02:98
 TEXT 06:8859-1
 AVDST28:Autre canevas de nivellement
@@ -600,78 +600,78 @@ TEXT 06:8859-1
 AVDST07:Inconnu
 AVLSA02:01
 TEXT 06:8859-1
-AVDST31:Canevas gÃ©odÃ©sique du 1er ordre
+AVDST31:Canevas géodésique du 1er ordre
 AVLSA02:02
 TEXT 06:8859-1
-AVDST32:Canevas gÃ©odÃ©sique du 2Ã¨me ordre
+AVDST32:Canevas géodésique du 2ème ordre
 AVLSA02:03
 TEXT 06:8859-1
-AVDST32:Canevas gÃ©odÃ©sique du 3Ã¨me ordre
+AVDST32:Canevas géodésique du 3ème ordre
 AVLSA02:04
 TEXT 06:8859-1
-AVDST32:Canevas gÃ©odÃ©sique du 4Ã¨me ordre
+AVDST32:Canevas géodésique du 4ème ordre
 AVLSA02:05
 TEXT 06:8859-1
-AVDST35:Canevas complÃ©mentaire (5Ã¨me ordre)
+AVDST35:Canevas complémentaire (5ème ordre)
 AVLSA02:06
 TEXT 06:8859-1
-AVDST55:Canevas d'ensemble ou de stÃ©rÃ©oprÃ©paration de prÃ©cision
+AVDST55:Canevas d'ensemble ou de stéréopréparation de précision
 AVLSA02:07
 TEXT 06:8859-1
-AVDST72:Canevas d'ensemble ou de stÃ©rÃ©oprÃ©paration ordinaire, y compris triangul
+AVDST72:Canevas d'ensemble ou de stéréopréparation ordinaire, y compris triangul
 NEXT 12:ation < 1980
 AVLSA02:08
 TEXT 06:8859-1
-AVDST30:Canevas polygonal de prÃ©cision
+AVDST30:Canevas polygonal de précision
 AVLSA02:09
 TEXT 06:8859-1
-AVDST47:Canevas polygonal ordinaire ou antÃ©rieur Ã  1980
+AVDST47:Canevas polygonal ordinaire ou antérieur à 1980
 AVLSA02:10
 TEXT 06:8859-1
-AVDST42:AÃ©rocanevas ou charpente photogrammÃ©trique
+AVDST42:Aérocanevas ou charpente photogrammétrique
 AVLSA02:11
 TEXT 06:8859-1
 AVDST18:Point de charpente
 AVLSA02:12
 TEXT 06:8859-1
-AVDST52:Localisation planimÃ©trique d'un point de nivellement
+AVDST52:Localisation planimétrique d'un point de nivellement
 AVLSA02:20
 TEXT 06:8859-1
-AVDST45:Canevas pÃ©renne ou de prÃ©cision (depuis 2001)
+AVDST45:Canevas pérenne ou de précision (depuis 2001)
 AVLSA02:21
 TEXT 06:8859-1
-AVDST72:Canevas ordinaire ou prÃ©alable Ã  AFAF ou de stÃ©rÃ©oprÃ©paration pour une P
-NEXT 37:dV infÃ©rieure au 1/4000 (depuis 2001)
+AVDST72:Canevas ordinaire ou préalable à AFAF ou de stéréopréparation pour une P
+NEXT 37:dV inférieure au 1/4000 (depuis 2001)
 AVLSA02:22
 TEXT 06:8859-1
-AVDST65:Canevas de stÃ©rÃ©oprÃ©paration pour une PdV au 1/2500 (depuis 2001)
+AVDST65:Canevas de stéréopréparation pour une PdV au 1/2500 (depuis 2001)
 AVLSA02:23
 TEXT 06:8859-1
-AVDST51:Canevas d'appui pour gÃ©orÃ©fÃ©rencement (depuis 2001)
+AVDST51:Canevas d'appui pour géoréférencement (depuis 2001)
 AVLSA02:24
 TEXT 06:8859-1
-AVDST28:Canevas gÃ©odÃ©sique RGF93-RRF
+AVDST28:Canevas géodésique RGF93-RRF
 AVLSA02:25
 TEXT 06:8859-1
-AVDST28:Canevas gÃ©odÃ©sique RGF93-RBF
+AVDST28:Canevas géodésique RGF93-RBF
 AVLSA02:26
 TEXT 06:8859-1
-AVDST28:Canevas gÃ©odÃ©sique RGF93-RDF
+AVDST28:Canevas géodésique RGF93-RDF
 AVLSA02:27
 TEXT 06:8859-1
-AVDST70:Canevas gÃ©odÃ©sique WGS84-UTM Nord fuseau 20 (Guadeloupe et Martinique)
+AVDST70:Canevas géodésique WGS84-UTM Nord fuseau 20 (Guadeloupe et Martinique)
 AVLSA02:28
 TEXT 06:8859-1
-AVDST52:Canevas gÃ©odÃ©sique RGF95-UTM Nord fuseau 22 (Guyane)
+AVDST52:Canevas géodésique RGF95-UTM Nord fuseau 22 (Guyane)
 AVLSA02:29
 TEXT 06:8859-1
-AVDST52:Canevas gÃ©odÃ©sique RGR92-UTM Sud fuseau 40 (RÃ©union)
+AVDST52:Canevas géodésique RGR92-UTM Sud fuseau 40 (Réunion)
 AVLSA02:30
 TEXT 06:8859-1
-AVDST52:Canevas gÃ©odÃ©sique RGM04-UTM Sud fuseau 38 (Mayotte)
+AVDST52:Canevas géodésique RGM04-UTM Sud fuseau 38 (Mayotte)
 AVLSA02:98
 TEXT 06:8859-1
-AVDST23:Point de levÃ© cadastral
+AVDST23:Point de levé cadastral
 
 RTYSA03:DIA
 RIDSA13:ID_N_ATT_QUPL
@@ -685,19 +685,19 @@ UNIST00:
 AVCSN01:5
 AVLSA02:01
 TEXT 06:8859-1
-AVDST40:Plan rÃ©gulier Ã©tabli avant le 20/03/1980
+AVDST40:Plan régulier établi avant le 20/03/1980
 AVLSA02:02
 TEXT 06:8859-1
-AVDST17:Plan non rÃ©gulier
+AVDST17:Plan non régulier
 AVLSA02:03
 TEXT 06:8859-1
-AVDST32:Plan de qualitÃ© P3 ou CP [10 cm]
+AVDST32:Plan de qualité P3 ou CP [10 cm]
 AVLSA02:04
 TEXT 06:8859-1
-AVDST32:Plan de qualitÃ© P4 ou CP [20 cm]
+AVDST32:Plan de qualité P4 ou CP [20 cm]
 AVLSA02:05
 TEXT 06:8859-1
-AVDST32:Plan de qualitÃ© P5 ou CP [40 cm]
+AVDST32:Plan de qualité P5 ou CP [40 cm]
 
 RTYSA03:DIA
 RIDSA13:ID_N_ATT_RCAD
@@ -739,10 +739,10 @@ TEXT 06:8859-1
 AVDST20:Texture transparente
 AVLSA02:14
 TEXT 06:8859-1
-AVDST16:Symbole d'Ã©glise
+AVDST16:Symbole d'église
 AVLSA02:15
 TEXT 06:8859-1
-AVDST18:Symbole de mosquÃ©e
+AVDST18:Symbole de mosquée
 AVLSA02:16
 TEXT 06:8859-1
 AVDST20:Symbole de synagogue
@@ -751,7 +751,7 @@ TEXT 06:8859-1
 AVDST13:Limite d'Etat
 AVLSA02:18
 TEXT 06:8859-1
-AVDST21:Limite de DÃ©partement
+AVDST21:Limite de Département
 AVLSA02:19
 TEXT 06:8859-1
 AVDST27:Amorce de limite de commune
@@ -766,13 +766,13 @@ TEXT 06:8859-1
 AVDST21:Trottoirs et sentiers
 AVLSA02:24
 TEXT 06:8859-1
-AVDST18:Gazoduc ou olÃ©oduc
+AVDST18:Gazoduc ou oléoduc
 AVLSA02:25
 TEXT 06:8859-1
 AVDST07:Aqueduc
 AVLSA02:26
 TEXT 06:8859-1
-AVDST12:TÃ©lÃ©phÃ©rique
+AVDST12:Téléphérique
 AVLSA02:27
 TEXT 06:8859-1
 AVDST27:Ligne de transport de force
@@ -781,11 +781,11 @@ TEXT 06:8859-1
 AVDST21:Rail de chemin de fer
 AVLSA02:30
 TEXT 06:8859-1
-AVDST21:FlÃ¨che de cours d'eau
+AVDST21:Flèche de cours d'eau
 AVLSA02:31
 TEXT 06:8859-1
-AVDST72:FlÃ¨che de rattachement d'un numÃ©ro de parcelle ou de la rÃ©fÃ©rence d'un b
-NEXT 35:Ã¢timent sur le domaine non cadastrÃ©
+AVDST72:Flèche de rattachement d'un numéro de parcelle ou de la référence d'un b
+NEXT 35:âtiment sur le domaine non cadastré
 AVLSA02:32
 TEXT 06:8859-1
 AVDST41:Limite surfacique ne formant pas parcelle
@@ -806,16 +806,16 @@ TEXT 06:8859-1
 AVDST15:Mur non mitoyen
 AVLSA02:41
 TEXT 06:8859-1
-AVDST13:FossÃ© mitoyen
+AVDST13:Fossé mitoyen
 AVLSA02:42
 TEXT 06:8859-1
-AVDST17:FossÃ© non mitoyen
+AVDST17:Fossé non mitoyen
 AVLSA02:43
 TEXT 06:8859-1
-AVDST17:ClÃ´ture mitoyenne
+AVDST17:Clôture mitoyenne
 AVLSA02:44
 TEXT 06:8859-1
-AVDST21:ClÃ´ture non mitoyenne
+AVDST21:Clôture non mitoyenne
 AVLSA02:45
 TEXT 06:8859-1
 AVDST14:Haie mitoyenne
@@ -827,22 +827,22 @@ TEXT 06:8859-1
 AVDST05:Halte
 AVLSA02:48
 TEXT 06:8859-1
-AVDST05:ArrÃªt
+AVDST05:Arrêt
 AVLSA02:49
 TEXT 06:8859-1
 AVDST07:Station
 AVLSA02:50
 TEXT 06:8859-1
-AVDST06:PylÃ´ne
+AVDST06:Pylône
 AVLSA02:51
 TEXT 06:8859-1
-AVDST18:CimetiÃ¨re chrÃ©tien
+AVDST18:Cimetière chrétien
 AVLSA02:52
 TEXT 06:8859-1
-AVDST19:CimetiÃ¨re israÃ©lite
+AVDST19:Cimetière israélite
 AVLSA02:53
 TEXT 06:8859-1
-AVDST18:CimetiÃ¨re musulman
+AVDST18:Cimetière musulman
 AVLSA02:62
 TEXT 06:8859-1
 AVDST35:Terrain de sports, petits ruisseaux
@@ -857,28 +857,28 @@ TEXT 06:8859-1
 AVDST07:Piscine
 AVLSA02:71
 TEXT 06:8859-1
-AVDST22:Point gÃ©odÃ©sique bornÃ©
+AVDST22:Point géodésique borné
 AVLSA02:72
 TEXT 06:8859-1
-AVDST26:Point gÃ©odÃ©sique non bornÃ©
+AVDST26:Point géodésique non borné
 AVLSA02:73
 TEXT 06:8859-1
-AVDST72:Point bornÃ© de canevas cadastral ordinaire ou prÃ©alable Ã  AFAF ou d'appu
+AVDST72:Point borné de canevas cadastral ordinaire ou préalable à AFAF ou d'appu
 NEXT 72:i d'une prise de vues permettant la confection d'un plan de classe de pr
-NEXT 15:Ã©cision [20 cm]
+NEXT 15:écision [20 cm]
 AVLSA02:74
 TEXT 06:8859-1
-AVDST46:Point bornÃ© de canevas pÃ©renne ou de prÃ©cision
+AVDST46:Point borné de canevas pérenne ou de précision
 AVLSA02:75
 TEXT 06:8859-1
-AVDST72:Point bornÃ© de canevas d'appui d'une prise de vues permettant la confect
-NEXT 44:ion d'un plan de classe de prÃ©cision [10 cm]
+AVDST72:Point borné de canevas d'appui d'une prise de vues permettant la confect
+NEXT 44:ion d'un plan de classe de précision [10 cm]
 AVLSA02:76
 TEXT 06:8859-1
-AVDST39:Point bornÃ© d'appui de gÃ©orÃ©fÃ©rencement
+AVDST39:Point borné d'appui de géoréférencement
 AVLSA02:77
 TEXT 06:8859-1
-AVDST10:RepÃ¨re NGF
+AVDST10:Repère NGF
 AVLSA02:78
 TEXT 06:8859-1
 AVDST12:Borne du NGF
@@ -887,7 +887,7 @@ TEXT 06:8859-1
 AVDST15:Nivellement MRL
 AVLSA02:80
 TEXT 06:8859-1
-AVDST27:Autre repÃ¨re de nivellement
+AVDST27:Autre repère de nivellement
 AVLSA02:81
 TEXT 06:8859-1
 AVDST23:Borne limite de commune

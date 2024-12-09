@@ -209,7 +209,7 @@ impl ExchangeReader for THFReader {
 /// ```ignore
 ///     let file = "data/edigeo-740240000A01/E0000A01.THF";
 ///     let reader = EdigeoReader::new(file);
-///     let data = reader.reader.read_bundle();
+///     let data = reader.read_bundle();
 ///
 ///     println!("{}", data.decode_file(&data.thf));
 /// ```

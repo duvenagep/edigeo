@@ -47,7 +47,7 @@ impl Header {
 /// # Panics
 /// Panics if the input does not contain a colon (`:`).
 pub fn parse_code(line: &str) -> String {
-    assert!(line.contains(":"), "Input str not of valid form");
+    // assert!(line.contains(":"), "Input str not of valid form");
     line[0..3].to_string()
 }
 

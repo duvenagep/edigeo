@@ -14,42 +14,14 @@ fn main() {
     let thf = decode_file(&data.thf);
     let lines: Vec<&str> = thf.lines().filter(|l| !l.is_empty()).collect();
     let pf = parse_blocks(lines);
-    println!("{:?}", pf);
-    // for line in lines {
-    //     let l = Line::parse_line(&line);
-    //     println!("{:?}", l);
-    // }
-
-    // let e = EdigeoDir::extract_files(dir);
-
-    // if let Ok(lines) = EdigeoDir::read_lines_efficient(e.thf) {
-    //     let pf = parse_blocks(lines);
-    //     println!("{:#?}", pf);
-    //     // for line in lines {
-    //     //     // println!("{line}");
-    //     //     let data = Line::parse_line(&line);
-    //     //     println!("{:?}", data);
-    //     // }
-    // }
-
-    // let e = EdigeoDir::extract_files(dir);
-
-    // if let Ok(lines) = EdigeoDir::read_lines_efficient(e.thf) {
-    //     let pf = parse_blocks(lines);
-    //     println!("{:#?}", pf);
-    //     // for line in lines {
-    //     //     // println!("{line}");
-    //     //     let data = Line::parse_line(&line);
-    //     //     println!("{:?}", data);
-    //     // }
-    // }
+    println!("{:#?}", pf);
 
     let elapsed = now.elapsed();
     println!("Elapsed: {elapsed:.4?}");
 }
 
 #[derive(Debug)]
-struct ParsedFile {
+struct THFFile {
     support_block: Option<Block>,
     batch_block: Option<Block>,
 }
@@ -61,7 +33,7 @@ struct Block {
 }
 
 /// Parses the data and categorizes it into a support block and a batch block.
-fn parse_blocks(lines: Vec<&str>) -> ParsedFile {
+fn parse_blocks(lines: Vec<&str>) -> THFFile {
     let mut support_block = None;
     let mut batch_block = None;
     let mut current_block = None;
@@ -116,7 +88,7 @@ fn parse_blocks(lines: Vec<&str>) -> ParsedFile {
         }
     }
 
-    ParsedFile {
+    THFFile {
         support_block,
         batch_block,
     }

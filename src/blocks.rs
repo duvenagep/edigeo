@@ -1,5 +1,7 @@
+//! Contains all logic for processing **Blocks**.
 use crate::Line;
 
+/// BlockTypes Enum with variants for each Block
 #[derive(Debug)]
 pub enum BlockTypes {
     FEA,
@@ -16,6 +18,8 @@ pub trait ParseBlock {
 }
 
 pub struct THFFile {
+    id: String,
+    block_type: BlockTypes,
     data: Vec<u8>,
     blocks: Vec<Block>,
 }
