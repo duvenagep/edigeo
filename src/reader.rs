@@ -205,77 +205,17 @@ impl ExchangeReader for THFReader {
     }
 }
 
-// /// The main EdigeoReader struct that enables reading any input file type.
-// /// ```ignore
-// ///     let file = "data/edigeo-740240000A01/E0000A01.THF";
-// ///     let reader = EdigeoReader::new(file);
-// ///     let data = reader.read_bundle();
-// ///
-// ///     println!("{}", data.decode_file(&data.thf));
-// /// ```
-// pub struct EdigeoReader {
-//     /// Trait Object to read the [`ExchangeReader`]
-//     reader: Box<dyn ExchangeReader>,
-// }
-
-// impl EdigeoReader {
-//     /// Constructor method to create a [`EdigeoReader`] from any object that can be
-//     /// [`AsRef<Path>`] into a path.
-//     pub fn new<P: AsRef<Path>>(path: P) -> Self {
-//         let path = path.as_ref().to_owned();
-
-//         let reader: Box<dyn ExchangeReader> = match path.is_dir() {
-//             true => Box::new(DirReader::new(path)),
-//             false => match path.extension().and_then(|ext| ext.to_str()) {
-//                 Some("bz2") => Box::new(TarReader::new(path)),
-//                 Some("THF") => Box::new(THFReader::new(path)),
-//                 None | Some(_) => panic!("Invalid file format!"),
-//             },
-//         };
-
-//         Self { reader }
-//     }
-
-//     /// Consumes the [`EdigeoReader`] and returns the [`EdigeoBundle`]
-//     pub fn read_bundle(&self) -> EdigeoBundle {
-//         self.into_inner().read_bundle()
-//     }
-
-//     /// Create a reader `with_tar` to create a TAR file reader
-//     pub fn with_tar<P: AsRef<Path>>(path: P) -> Self {
-//         Self {
-//             reader: Box::new(TarReader::new(path)),
-//         }
-//     }
-
-//     /// Create a reader `with_thf` to create a .THF file reader
-//     pub fn with_thf<P: AsRef<Path>>(path: P) -> Self {
-//         Self {
-//             reader: Box::new(THFReader::new(path)),
-//         }
-//     }
-
-//     /// Create a reader `with_dir` to create a Directory reader
-//     pub fn with_dir<P: AsRef<Path>>(path: P) -> Self {
-//         Self {
-//             reader: Box::new(DirReader::new(path)),
-//         }
-//     }
-
-//     /// Returns the inner [`EdigeoExchange`] trait object
-//     fn into_inner(&self) -> &Box<dyn ExchangeReader> {
-//         &self.reader
-//     }
-// }
-
 /// The main Edigeo Excahnge can be read from 3 different sources
 /// The [`Reader`] enum has these 3 variants
 /// - Directories
 /// - Tar Archives
 /// - `.THF` files
 pub enum Reader {
+    /// Directory with all necessary [`EdigeoBundle`] files
     Dir(DirReader),
+    /// `.tar.bz2` archive file with all necessary [`EdigeoBundle`] files
     Tar(TarReader),
+    /// `.thf` file with all necessary [`EdigeoBundle`] files in same directory
     File(THFReader),
 }
 
