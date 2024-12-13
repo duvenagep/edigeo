@@ -156,6 +156,38 @@ impl FromStr for ValueType {
     }
 }
 
+/// Specifies the type of a code in an Edigeo header.
+#[derive(Debug, Clone, PartialEq)]
+pub enum Code {
+    /// Type of descriptor
+    RTY,
+    /// Descriptor Identifier
+    RID,
+    // AUT,
+    // ADR,
+    // LOC,
+    // VOC,
+    // SEC,
+    // RDI,
+    // VER,
+    // VDA,
+    // TRL,
+    // EDN,
+    // TDA,
+    // INF,
+}
+
+impl FromStr for Code {
+    type Err = EdigeoError;
+    fn from_str(input: &str) -> EdigeoResult<Self> {
+        match input {
+            "RTY" => Ok(Code::RTY),
+            "RID" => Ok(Code::RID),
+            _ => Err(EdigeoError::InvalidFormat(input.to_string())),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -31,6 +31,10 @@ impl Line {
             parsed_value: parse_value(&header, raw_value),
         }
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.is_empty()
+    }
 }
 
 /// Parses a raw value according to the specifications in the header.
