@@ -9,7 +9,7 @@ fn main() {
     let _dir = "data/edigeo-740240000A01/";
     let tar = "data/edigeo-740240000A01.tar.bz2";
 
-    let reader = EdigeoReader::new(tar);
+    let reader = EdigeoReader::new(_file);
     let data = reader.read_bundle();
     let thf = decode_file(&data.thf);
     let lines: Vec<&str> = thf.lines().filter(|l| !l.is_empty()).collect();
