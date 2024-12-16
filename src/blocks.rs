@@ -1,162 +1,128 @@
 //! Contains all logic for processing **Blocks**.
-use crate::{FormatResult, Line};
+use crate::{Code, FormatResult, KeyWordCode, Line};
 
-// /// BlockTypes Enum with variants for each Block
-// #[derive(Debug)]
-// pub enum BlockTypes {
-//     FEA,
-//     LNK,
-//     PNO,
-// //     PAR,
-// //     PFE,
-// //     GEO,
-// //     QUP,
-// // }
+/// Block Identifiers
+#[derive(Debug)]
+enum BlockIdent {
+    /// Indentifier value for THF Support Descriptor Block
+    GTS,
+    /// Indentifier value for THF Batch Descriptor Block
+    GTL,
+    /// Indentifier value for GEN Geographical Descriptor Block
+    DEG,
+    /// Indentifier value for GEN Geographical Data Block
+    GSE,
+}
 
-// #[derive(Debug)]
-// enum BlockIdent {
-//     /// Indentifier value for THF Support Descriptor Block
-//     GTS,
-//     /// Indentifier value for THF Batch Descriptor Block
-//     GTL,
-// }
+#[derive(Debug)]
+struct Block {
+    _id: BlockIdent,
+    entries: Vec<Line>,
+}
 
-// #[derive(Debug)]
-// struct Block {
-//     id: BlockIdent,
-//     entries: Vec<Line>,
-// }
+impl Block {
+    fn new(id: BlockIdent) -> Self {
+        Self {
+            _id: id,
+            entries: Vec::new(),
+        }
+    }
 
-// impl Block {
-//     fn new(id: BlockIdent) -> Self {
-//         Self {
-//             id,
-//             entries: Vec::new(),
-//         }
-//     }
+    fn add_line(&mut self, line: Line) {
+        self.entries.push(line);
+    }
+}
 
-//     fn add_line(&mut self, line: Line) {
-//         self.entries.push(line);
-//     }
-// }
+pub trait BlockParse {
+    fn parse<S: AsRef<str>>(lines: S) -> Self;
+}
 
-// #[derive(Debug)]
-// struct THFFile {
-//     support_block: Block,
-//     batch_block: Block,
-// }
+#[derive(Debug)]
+pub struct THFFile {
+    support_block: Block,
+    batch_block: Block,
+}
 
-// impl THFFile {
-//     fn new(&self, lines: Vec<Line>) -> Self {
-//         let mut support_block = Block::new(BlockIdent::GTS);
-//         let mut batch_block = Block::new(BlockIdent::GTL);
-//         let mut current = support_block;
+impl BlockParse for THFFile {
+    fn parse<S: AsRef<str>>(lines: S) -> Self {
+        let mut support_block = Block::new(BlockIdent::GTS);
+        let mut batch_block = Block::new(BlockIdent::GTL);
+        let mut current_block: Option<&mut Block> = None;
 
-//         for line in lines {
-//             if !line.is_empty() {
-//                 match line.header.code.as_str() {
-//                     "BOM" | "CSE" => {}
-//                     "RTY" => {
-//                         if line.parsed_value == Some(FormatResult::Text("GTS".to_string())) {
-//                             if let Some(block) = current.take() {
-//                                 batch_block = block;
-//                             }
+        for line in lines.as_ref().lines() {
+            if line.is_empty() {
+                continue;
+            }
+            let data = Line::parse_line(&line);
 
-//                             current = support_block;
-//                         } else if line.parsed_value == Some(FormatResult::Text("GTL".to_string())) {
-//                             if let Some(block) = current.take() {
-//                                 support_block = block;
-//                             }
-//                             current = batch_block;
-//                         }
-//                     }
-//                     "EOM" => {}
-//                     _ => {
-//                         if let Some(ref mut block) = current {
-//                             block.entries.push(line);
-//                         }
-//                     }
-//                 }
-//             }
-//         }
+            match data.header.code {
+                Code::KWCode(KeyWordCode::BOM) => {}
+                Code::RTY => match data.parsed_value {
+                    Some(FormatResult::Text(ref value)) if value == "GTS" => {
+                        current_block = Some(&mut support_block);
+                    }
+                    Some(FormatResult::Text(ref value)) if value == "GTL" => {
+                        current_block = Some(&mut batch_block);
+                    }
+                    _ => {}
+                },
+                Code::KWCode(KeyWordCode::EOM) => current_block = None,
+                _ => {
+                    if let Some(block) = &mut current_block {
+                        block.add_line(data);
+                    }
+                }
+            }
+        }
 
-//         Self {
-//             support_block,
-//             batch_block,
-//         }
-//     }
-// }
+        Self {
+            support_block,
+            batch_block,
+        }
+    }
+}
 
-// // #[derive(Debug)]
-// // struct ParsedFile {
-// //     support_block: Option<Block>,
-// //     batch_block: Option<Block>,
-// // }
+#[derive(Debug)]
+pub struct GENFile {
+    geographical_descriptor_block: Block,
+    geographical_data_block: Block,
+}
 
-// // #[derive(Debug)]
-// // struct Block {
-// //     block_type: String,
-// //     entries: Vec<Line>,
-// // }
+impl BlockParse for GENFile {
+    fn parse<S: AsRef<str>>(lines: S) -> Self {
+        let mut geographical_descriptor_block = Block::new(BlockIdent::DEG);
+        let mut geographical_data_block = Block::new(BlockIdent::GSE);
+        let mut current_block: Option<&mut Block> = None;
 
-// // /// Parses the data and categorizes it into a support block and a batch block.
-// // fn parse_blocks(lines: Vec<&str>) -> ParsedFile {
-// //     let mut support_block = None;
-// //     let mut batch_block = None;
-// //     let mut current_block = None;
+        for line in lines.as_ref().lines() {
+            if line.is_empty() {
+                continue;
+            }
+            let data = Line::parse_line(&line);
 
-// //     for line in lines {
-// //         if !line.is_empty() {
-// //             let data = Line::parse_line(&line);
-// //             match data.header.code.as_str() {
-// //                 "BOM" => {
-// //                     // Start of file (BOMT)
-// //                 }
-// //                 "CSE" => {
-// //                     // Character set (CSET)
-// //                 }
-// //                 "RTY" => {
-// //                     // Block switch based on "GTS" or "GTL"
-// //                     if data.parsed_value == Some(FormatResult::Text("GTS".to_string())) {
-// //                         // Save any current block to batch_block if it exists
-// //                         if let Some(block) = current_block.take() {
-// //                             batch_block = Some(block);
-// //                         }
-// //                         // Start a new support block
-// //                         current_block = Some(Block {
-// //                             block_type: "GTS".to_string(),
-// //                             entries: Vec::new(),
-// //                         });
-// //                     } else if data.parsed_value == Some(FormatResult::Text("GTL".to_string())) {
-// //                         // Save any current block to support_block if it exists
-// //                         if let Some(block) = current_block.take() {
-// //                             support_block = Some(block);
-// //                         }
-// //                         // Start a new batch block
-// //                         current_block = Some(Block {
-// //                             block_type: "GTL".to_string(),
-// //                             entries: Vec::new(),
-// //                         });
-// //                     }
-// //                 }
-// //                 "EOM" => {
-// //                     // End of file (EOMT)
-// //                     if let Some(block) = current_block.take() {
-// //                         batch_block = Some(block);
-// //                     }
-// //                 }
-// //                 _ => {
-// //                     // Collect entries into the current block
-// //                     if let Some(ref mut block) = current_block {
-// //                         block.entries.push(data);
-// //                     }
-// //                 }
-// //             }
-// //         }
-// //     }
+            match data.header.code {
+                Code::KWCode(KeyWordCode::BOM) => {}
+                Code::RTY => match data.parsed_value {
+                    Some(FormatResult::Text(ref value)) if value == "DEG" => {
+                        current_block = Some(&mut geographical_descriptor_block);
+                    }
+                    Some(FormatResult::Text(ref value)) if value == "GSE" => {
+                        current_block = Some(&mut geographical_data_block);
+                    }
+                    _ => {}
+                },
+                Code::KWCode(KeyWordCode::EOM) => current_block = None,
+                _ => {
+                    if let Some(block) = &mut current_block {
+                        block.add_line(data);
+                    }
+                }
+            }
+        }
 
-// //     ParsedFile {
-// //         support_block,
-// //         batch_block,
-// //     }
-// // }
+        Self {
+            geographical_descriptor_block,
+            geographical_data_block,
+        }
+    }
+}

@@ -32,6 +32,8 @@ impl Line {
         }
     }
 
+    /// Checks if [`Line`] is empty or Newline and returns True
+    #[allow(unconditional_recursion)]
     pub fn is_empty(&self) -> bool {
         self.is_empty()
     }
@@ -86,7 +88,7 @@ mod tests {
             "BOMT 12:E0000A01.THF",
             Line {
                 header: Header {
-                    code: "BOM".to_string(),
+                    code: Code::KWCode(KeyWordCode::BOM),
                     value_type: ValueType::T,
                     value_format: ValueFormat::WhiteSpace,
                     value_size: 12,
@@ -108,7 +110,7 @@ mod tests {
             "BOMT 12:E0000A01.THF",
             Line {
                 header: Header {
-                    code: "BOM".to_string(),
+                    code: Code::KWCode(KeyWordCode::BOM),
                     value_type: ValueType::T,
                     value_format: ValueFormat::WhiteSpace,
                     value_size: 7,

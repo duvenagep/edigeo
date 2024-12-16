@@ -83,17 +83,17 @@ pub trait ExchangeReader {
 }
 
 /// Tar file `.tar.bz2` is the most common exchange format for Edigeo
-pub struct TarReader {
+struct TarReader {
     path: PathBuf,
 }
 
 /// The directory where the main `.THF` file is located
-pub struct DirReader {
+struct DirReader {
     path: PathBuf,
 }
 
 /// The main `.THF` file reader
-pub struct THFReader {
+struct THFReader {
     path: PathBuf,
 }
 
@@ -210,7 +210,7 @@ impl ExchangeReader for THFReader {
 /// - Directories
 /// - Tar Archives
 /// - `.THF` files
-pub enum Reader {
+enum Reader {
     /// Directory with all necessary [`EdigeoBundle`] files
     Dir(DirReader),
     /// `.tar.bz2` archive file with all necessary [`EdigeoBundle`] files

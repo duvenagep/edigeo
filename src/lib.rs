@@ -20,6 +20,7 @@ pub mod header;
 pub mod line;
 pub mod reader;
 
+pub use blocks::*;
 pub use format::*;
 pub use header::*;
 pub use line::*;
