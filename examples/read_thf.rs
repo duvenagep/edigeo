@@ -13,6 +13,11 @@ fn main() {
     let data = reader.read_bundle();
     let thf = decode_file(&data.thf);
     let blocks = THFFile::parse(thf);
+    if let Some(gen) = data.gen {
+        let gen = decode_file(&gen);
+        let blocks = GENFile::parse(gen);
+        println!("{:?}", blocks);
+    }
     println!("{:?}", blocks);
 
     let elapsed = now.elapsed();

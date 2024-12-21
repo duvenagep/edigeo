@@ -9,6 +9,24 @@ use std::{
 };
 use tar::Archive;
 
+// // Implement this optimisation later to avoid allocations
+// #[derive(Debug)]
+// enum CowBytes<'a> {
+//     Borrowed(&'a [u8]),
+//     Owned(Vec<u8>),
+// }
+// impl<'a> Default for CowBytes<'a> {
+//     fn default() -> Self {
+//         CowBytes::Borrowed(&[])
+//     }
+// }
+
+// impl<'a> CowBytes<'a> {
+//     fn into_inner(&self) -> &[u8] {
+//         self.into_inner()
+//     }
+// }
+
 /// Represents a collections of Edigeo files for various file types.
 ///
 /// This struct is designed to hold the data of each component

@@ -204,6 +204,10 @@ pub enum Code {
     GDC,
     GDN,
     GDI,
+    CM1,
+    CM2,
+    STR,
+    REG,
 }
 
 impl FromStr for Code {
@@ -241,6 +245,10 @@ impl FromStr for Code {
             "GDC" => Ok(Code::GDC),
             "GDN" => Ok(Code::GDN),
             "GDI" => Ok(Code::GDI),
+            "CM1" => Ok(Code::CM1),
+            "CM2" => Ok(Code::CM2),
+            "STR" => Ok(Code::STR),
+            "REG" => Ok(Code::REG),
             _ => Err(EdigeoError::InvalidFormat(input.to_string())),
         }
     }
