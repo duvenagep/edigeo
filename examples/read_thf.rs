@@ -1,6 +1,6 @@
 use edigeo::*;
 
-use std::time::Instant;
+use std::{str::FromStr, time::Instant};
 
 fn main() {
     let now = Instant::now();
@@ -12,12 +12,14 @@ fn main() {
     let reader = EdigeoReader::new(tar);
     let data = reader.read_bundle();
     let thf = decode_file(&data.thf);
-    let blocks = THFFile::parse(thf);
-    if let Some(gen) = data.gen {
-        let gen = decode_file(&gen);
-        let blocks = GENFile::parse(gen);
-        println!("{:?}", blocks);
+    for line in thf.lines() {
+        if !line.is_empty() {
+            let d = Line::parse_line(line);
+            // println!("{:?}", d);
+        }
     }
+
+    let blocks = THFFile::parse(thf);
     println!("{:?}", blocks);
 
     let elapsed = now.elapsed();

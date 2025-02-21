@@ -1,5 +1,4 @@
 //! Contains Edigeo file [`Header`] definition & logic..
-
 use crate::error::*;
 use std::str::FromStr;
 
@@ -48,6 +47,7 @@ impl Header {
 /// Panics if the input does not contain a colon (`:`).
 pub fn parse_code(line: &str) -> Code {
     // assert!(line.contains(":"), "Input str not of valid form");
+    // line[0..3].to_string()
     line[0..3]
         .parse::<Code>()
         .expect("Invalid Code value in Header String")
@@ -169,14 +169,17 @@ pub enum KeyWordCode {
     EOM,
 }
 
-/// Specifies the type of a code in an Edigeo header.
+/// Type of descriptor
 #[derive(Debug, Clone, PartialEq)]
-pub enum Code {
-    /// Special File Keywords
-    KWCode(KeyWordCode),
+pub enum TypeCode {
     /// Type of descriptor
     RTY,
-    /// Descriptor Identifier
+}
+
+/// Descriptor Identifier
+#[derive(Debug, Clone, PartialEq)]
+#[allow(missing_docs)]
+pub enum ZoneName {
     RID,
     AUT,
     ADR,
@@ -208,6 +211,65 @@ pub enum Code {
     CM2,
     STR,
     REG,
+    RET,
+    REN,
+    REL,
+    DIM,
+    ALS,
+    UNH,
+    LAB,
+    DEF,
+    ORI,
+    CAT,
+    TYP,
+    UNI,
+    AVC,
+    AVL,
+    AVD,
+    DIP,
+    KND,
+    AAC,
+    AAP,
+    QAC,
+    CAN,
+    AV1,
+    AV2,
+    CA1,
+    CA2,
+    SCC,
+    SCP,
+    OCC,
+    ODA,
+    UTY,
+    ULO,
+    UDA,
+    RAT,
+    EDA,
+    COC,
+    COP,
+    COR,
+    ATC,
+    PTC,
+    REF,
+    ATP,
+    ATV,
+    QAP,
+    FTC,
+    FTP,
+    SNS,
+    TEX,
+}
+
+/// Specifies the type of a code in an Edigeo header.
+#[derive(Debug, Clone, PartialEq)]
+#[allow(missing_docs)]
+pub enum Code {
+    /// Special File Keywords
+    KWCode(KeyWordCode),
+    /// Type of descriptor
+    TypeCode(TypeCode),
+    /// Zonename value Codes
+    ZoneCode(ZoneName),
 }
 
 impl FromStr for Code {
@@ -217,38 +279,85 @@ impl FromStr for Code {
             "BOM" => Ok(Code::KWCode(KeyWordCode::BOM)),
             "CSE" => Ok(Code::KWCode(KeyWordCode::CSE)),
             "EOM" => Ok(Code::KWCode(KeyWordCode::EOM)),
-            "RTY" => Ok(Code::RTY),
-            "RID" => Ok(Code::RID),
-            "AUT" => Ok(Code::AUT),
-            "ADR" => Ok(Code::ADR),
-            "LOC" => Ok(Code::LOC),
-            "VOC" => Ok(Code::VOC),
-            "SEC" => Ok(Code::SEC),
-            "RDI" => Ok(Code::RDI),
-            "VER" => Ok(Code::VER),
-            "VDA" => Ok(Code::VDA),
-            "TRL" => Ok(Code::TRL),
-            "EDN" => Ok(Code::EDN),
-            "TDA" => Ok(Code::TDA),
-            "INF" => Ok(Code::INF),
-            "LON" => Ok(Code::LON),
-            "GNN" => Ok(Code::GNN),
-            "GNI" => Ok(Code::GNI),
-            "GON" => Ok(Code::GON),
-            "GOI" => Ok(Code::GOI),
-            "QAN" => Ok(Code::QAN),
-            "QAI" => Ok(Code::QAI),
-            "DIN" => Ok(Code::DIN),
-            "DII" => Ok(Code::DII),
-            "SCN" => Ok(Code::SCN),
-            "SCI" => Ok(Code::SCI),
-            "GDC" => Ok(Code::GDC),
-            "GDN" => Ok(Code::GDN),
-            "GDI" => Ok(Code::GDI),
-            "CM1" => Ok(Code::CM1),
-            "CM2" => Ok(Code::CM2),
-            "STR" => Ok(Code::STR),
-            "REG" => Ok(Code::REG),
+            "RTY" => Ok(Code::TypeCode(TypeCode::RTY)),
+            "RID" => Ok(Code::ZoneCode(ZoneName::RID)),
+            "AUT" => Ok(Code::ZoneCode(ZoneName::AUT)),
+            "ADR" => Ok(Code::ZoneCode(ZoneName::ADR)),
+            "LOC" => Ok(Code::ZoneCode(ZoneName::LOC)),
+            "VOC" => Ok(Code::ZoneCode(ZoneName::VOC)),
+            "SEC" => Ok(Code::ZoneCode(ZoneName::SEC)),
+            "RDI" => Ok(Code::ZoneCode(ZoneName::RDI)),
+            "VER" => Ok(Code::ZoneCode(ZoneName::VER)),
+            "VDA" => Ok(Code::ZoneCode(ZoneName::VDA)),
+            "TRL" => Ok(Code::ZoneCode(ZoneName::TRL)),
+            "EDN" => Ok(Code::ZoneCode(ZoneName::EDN)),
+            "TDA" => Ok(Code::ZoneCode(ZoneName::TDA)),
+            "INF" => Ok(Code::ZoneCode(ZoneName::INF)),
+            "LON" => Ok(Code::ZoneCode(ZoneName::LON)),
+            "GNN" => Ok(Code::ZoneCode(ZoneName::GNN)),
+            "GNI" => Ok(Code::ZoneCode(ZoneName::GNI)),
+            "GON" => Ok(Code::ZoneCode(ZoneName::GON)),
+            "GOI" => Ok(Code::ZoneCode(ZoneName::GOI)),
+            "QAN" => Ok(Code::ZoneCode(ZoneName::QAN)),
+            "QAI" => Ok(Code::ZoneCode(ZoneName::QAI)),
+            "DIN" => Ok(Code::ZoneCode(ZoneName::DIN)),
+            "DII" => Ok(Code::ZoneCode(ZoneName::DII)),
+            "SCN" => Ok(Code::ZoneCode(ZoneName::SCN)),
+            "SCI" => Ok(Code::ZoneCode(ZoneName::SCI)),
+            "GDC" => Ok(Code::ZoneCode(ZoneName::GDC)),
+            "GDN" => Ok(Code::ZoneCode(ZoneName::GDN)),
+            "GDI" => Ok(Code::ZoneCode(ZoneName::GDI)),
+            "CM1" => Ok(Code::ZoneCode(ZoneName::CM1)),
+            "CM2" => Ok(Code::ZoneCode(ZoneName::CM2)),
+            "STR" => Ok(Code::ZoneCode(ZoneName::STR)),
+            "REG" => Ok(Code::ZoneCode(ZoneName::REG)),
+            "RET" => Ok(Code::ZoneCode(ZoneName::RET)),
+            "REN" => Ok(Code::ZoneCode(ZoneName::REN)),
+            "REL" => Ok(Code::ZoneCode(ZoneName::REL)),
+            "DIM" => Ok(Code::ZoneCode(ZoneName::DIM)),
+            "ALS" => Ok(Code::ZoneCode(ZoneName::ALS)),
+            "UNH" => Ok(Code::ZoneCode(ZoneName::UNH)),
+            "LAB" => Ok(Code::ZoneCode(ZoneName::LAB)),
+            "DEF" => Ok(Code::ZoneCode(ZoneName::DEF)),
+            "ORI" => Ok(Code::ZoneCode(ZoneName::ORI)),
+            "CAT" => Ok(Code::ZoneCode(ZoneName::CAT)),
+            "TYP" => Ok(Code::ZoneCode(ZoneName::TYP)),
+            "UNI" => Ok(Code::ZoneCode(ZoneName::UNI)),
+            "AVC" => Ok(Code::ZoneCode(ZoneName::AVC)),
+            "AVL" => Ok(Code::ZoneCode(ZoneName::AVL)),
+            "AVD" => Ok(Code::ZoneCode(ZoneName::AVD)),
+            "DIP" => Ok(Code::ZoneCode(ZoneName::DIP)),
+            "KND" => Ok(Code::ZoneCode(ZoneName::KND)),
+            "AAC" => Ok(Code::ZoneCode(ZoneName::AAC)),
+            "AAP" => Ok(Code::ZoneCode(ZoneName::AAP)),
+            "QAC" => Ok(Code::ZoneCode(ZoneName::QAC)),
+            "CAN" => Ok(Code::ZoneCode(ZoneName::CAN)),
+            "AV1" => Ok(Code::ZoneCode(ZoneName::AV1)),
+            "AV2" => Ok(Code::ZoneCode(ZoneName::AV2)),
+            "CA1" => Ok(Code::ZoneCode(ZoneName::CA1)),
+            "CA2" => Ok(Code::ZoneCode(ZoneName::CA2)),
+            "SCC" => Ok(Code::ZoneCode(ZoneName::SCC)),
+            "SCP" => Ok(Code::ZoneCode(ZoneName::SCP)),
+            "OCC" => Ok(Code::ZoneCode(ZoneName::OCC)),
+            "ODA" => Ok(Code::ZoneCode(ZoneName::ODA)),
+            "UTY" => Ok(Code::ZoneCode(ZoneName::UTY)),
+            "ULO" => Ok(Code::ZoneCode(ZoneName::ULO)),
+            "UDA" => Ok(Code::ZoneCode(ZoneName::UDA)),
+            "RAT" => Ok(Code::ZoneCode(ZoneName::RAT)),
+            "EDA" => Ok(Code::ZoneCode(ZoneName::EDA)),
+            "COC" => Ok(Code::ZoneCode(ZoneName::COC)),
+            "COP" => Ok(Code::ZoneCode(ZoneName::COP)),
+            "COR" => Ok(Code::ZoneCode(ZoneName::COR)),
+            "ATC" => Ok(Code::ZoneCode(ZoneName::ATC)),
+            "PTC" => Ok(Code::ZoneCode(ZoneName::PTC)),
+            "REF" => Ok(Code::ZoneCode(ZoneName::REF)),
+            "ATP" => Ok(Code::ZoneCode(ZoneName::ATP)),
+            "ATV" => Ok(Code::ZoneCode(ZoneName::ATV)),
+            "QAP" => Ok(Code::ZoneCode(ZoneName::QAP)),
+            "FTC" => Ok(Code::ZoneCode(ZoneName::FTC)),
+            "FTP" => Ok(Code::ZoneCode(ZoneName::FTP)),
+            "SNS" => Ok(Code::ZoneCode(ZoneName::SNS)),
+            "TEX" => Ok(Code::ZoneCode(ZoneName::TEX)),
             _ => Err(EdigeoError::InvalidFormat(input.to_string())),
         }
     }
