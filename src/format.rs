@@ -1,5 +1,6 @@
 //! Contains Edigeo file parse formatters using the [`FormatParser`] trait.
 use crate::header::*;
+use chrono::NaiveDate;
 
 /// FormatResult Enum with variants being the DTypes of the parsed values
 #[derive(Debug, Clone, PartialEq)]
@@ -9,9 +10,11 @@ pub enum FormatResult {
     /// Signed Integer as result type
     Int(i32),
     /// Date in String Format as result type
-    Date(String),
+    Date(NaiveDate),
     /// Plain text as result type
     Text(String),
+    /// Coordinates are represented as tuple of strings
+    Coordinate((String, String)),
     /// Project description which is a compound of FormatResult as result type
     Descriptor(Vec<FormatResult>),
 }
@@ -25,7 +28,7 @@ pub trait FormatParser {
 }
 
 /// A parser that returns `None` for any input.
-pub struct NoneParser;
+struct NoneParser;
 
 impl FormatParser for NoneParser {
     fn parse(&self, _raw_value: &str) -> Option<FormatResult> {
@@ -34,7 +37,7 @@ impl FormatParser for NoneParser {
 }
 
 /// A parser for floating-point numbers.
-pub struct FloatParser;
+struct FloatParser;
 
 impl FormatParser for FloatParser {
     fn parse(&self, raw_value: &str) -> Option<FormatResult> {
@@ -43,7 +46,7 @@ impl FormatParser for FloatParser {
 }
 
 /// A parser for signed integers.
-pub struct IntParser;
+struct IntParser;
 
 impl FormatParser for IntParser {
     fn parse(&self, raw_value: &str) -> Option<FormatResult> {
@@ -52,24 +55,21 @@ impl FormatParser for IntParser {
 }
 
 /// A parser for dates in `YYYYMMDD` format.
-pub struct DateParser;
+struct DateParser;
 
 impl FormatParser for DateParser {
     fn parse(&self, raw_value: &str) -> Option<FormatResult> {
         if raw_value.len() != 8 {
             return None;
         }
-        Some(FormatResult::Date(format!(
-            "{}-{}-{}",
-            &raw_value[0..4],
-            &raw_value[4..6],
-            &raw_value[6..8]
-        )))
+        Some(FormatResult::Date(
+            NaiveDate::parse_from_str(raw_value, "%Y%m%d").unwrap(),
+        ))
     }
 }
 
 /// A parser for plain text.
-pub struct TextParser;
+struct TextParser;
 
 impl FormatParser for TextParser {
     fn parse(&self, raw_value: &str) -> Option<FormatResult> {
@@ -78,7 +78,7 @@ impl FormatParser for TextParser {
 }
 
 /// A parser for descriptors, splitting input by semicolons.
-pub struct DescriptorParser;
+struct DescriptorParser;
 
 impl FormatParser for DescriptorParser {
     fn parse(&self, raw_value: &str) -> Option<FormatResult> {
@@ -90,6 +90,24 @@ impl FormatParser for DescriptorParser {
     }
 }
 
+/// A parser for coordinates, splitting input by semicolons.
+struct CoordinateParser;
+
+impl FormatParser for CoordinateParser {
+    fn parse(&self, raw_value: &str) -> Option<FormatResult> {
+        let coords = raw_value.split_once(";");
+
+        if let Some(coords) = coords {
+            Some(FormatResult::Coordinate((
+                coords.0.to_string(),
+                coords.1.to_string(),
+            )))
+        } else {
+            None
+        }
+    }
+}
+
 /// Returns a parser based on the provided `Header`.
 ///
 /// This function selects an appropriate `FormatParser` implementation
@@ -97,7 +115,8 @@ impl FormatParser for DescriptorParser {
 pub fn get_parser(header: &Header) -> Box<dyn FormatParser> {
     match header.value_format {
         ValueFormat::A => Box::new(TextParser),
-        ValueFormat::C | ValueFormat::R => Box::new(FloatParser),
+        ValueFormat::C => Box::new(CoordinateParser),
+        ValueFormat::R => Box::new(FloatParser),
         ValueFormat::D => Box::new(DateParser),
         ValueFormat::E => Box::new(TextParser),
         ValueFormat::N | ValueFormat::I => Box::new(IntParser),
@@ -107,6 +126,9 @@ pub fn get_parser(header: &Header) -> Box<dyn FormatParser> {
             ValueType::C => Box::new(DescriptorParser),
         },
         ValueFormat::T => Box::new(TextParser),
-        ValueFormat::WhiteSpace => Box::new(NoneParser),
+        ValueFormat::WhiteSpace => match header.value_type {
+            ValueType::T => Box::new(TextParser),
+            _ => Box::new(NoneParser),
+        },
     }
 }
