@@ -47,7 +47,6 @@ impl Header {
 /// Panics if the input does not contain a colon (`:`).
 pub fn parse_code(line: &str) -> Code {
     // assert!(line.contains(":"), "Input str not of valid form");
-    // line[0..3].to_string()
     line[0..3]
         .parse::<Code>()
         .expect("Invalid Code value in Header String")
@@ -358,6 +357,34 @@ impl FromStr for Code {
             "FTP" => Ok(Code::ZoneCode(ZoneName::FTP)),
             "SNS" => Ok(Code::ZoneCode(ZoneName::SNS)),
             "TEX" => Ok(Code::ZoneCode(ZoneName::TEX)),
+            "RTY" => Ok(Code::RTY),
+            "RID" => Ok(Code::RID),
+            "AUT" => Ok(Code::AUT),
+            "ADR" => Ok(Code::ADR),
+            "LOC" => Ok(Code::LOC),
+            "VOC" => Ok(Code::VOC),
+            "SEC" => Ok(Code::SEC),
+            "RDI" => Ok(Code::RDI),
+            "VER" => Ok(Code::VER),
+            "VDA" => Ok(Code::VDA),
+            "TRL" => Ok(Code::TRL),
+            "EDN" => Ok(Code::EDN),
+            "TDA" => Ok(Code::TDA),
+            "INF" => Ok(Code::INF),
+            "LON" => Ok(Code::LON),
+            "GNN" => Ok(Code::GNN),
+            "GNI" => Ok(Code::GNI),
+            "GON" => Ok(Code::GON),
+            "GOI" => Ok(Code::GOI),
+            "QAN" => Ok(Code::QAN),
+            "QAI" => Ok(Code::QAI),
+            "DIN" => Ok(Code::DIN),
+            "DII" => Ok(Code::DII),
+            "SCN" => Ok(Code::SCN),
+            "SCI" => Ok(Code::SCI),
+            "GDC" => Ok(Code::GDC),
+            "GDN" => Ok(Code::GDN),
+            "GDI" => Ok(Code::GDI),
             _ => Err(EdigeoError::InvalidFormat(input.to_string())),
         }
     }
