@@ -1,7 +1,5 @@
 //! Contains all logic for processing **Blocks**.
 use crate::{decode_file, Code, FormatResult, KeyWordCode, Line};
-use crate::{Code, FormatResult, KeyWordCode, Line};
-use std::path::PathBuf;
 
 /// Block Identifiers
 #[derive(Debug)]
@@ -10,24 +8,52 @@ enum BlockIdent {
     GTS,
     /// Indentifier value for THF Batch Descriptor Block
     GTL,
-    // /// Indentifier value for GEN Geographical Descriptor Block
-    // DEG,
-    // /// Indentifier value for GEN Geographical Data Block
-    // GSE,
-    // /// Indentifier value for GEO Geographical Data Block
-    // GEO,
+    /// Indentifier value for GEN Geographical Descriptor Block
+    DEG,
+    /// Indentifier value for GEN Geographical Data Block
+    GSE,
+    /// Indentifier value for GEO Geographical Data Block
+    GEO,
+    /// Indentifier value for DID Data Block
+    DID,
+    /// Indentifier value for DIA Data Block
+    DIA,
+    /// Indentifier value for DIR Data Block
+    DIR,
+    /// Indentifier value for OBJ Data Block
+    OBJ,
+    /// Indentifier value for ATT Data Block
+    ATT,
+    /// Indentifier value for PGE Data Block
+    PGE,
+    /// Indentifier value for ASS Data Block
+    ASS,
+    /// Indentifier value for REL Data Block
+    REL,
+    /// Indentifier value for QUP Data Block
+    QUP,
+    /// Indentifier value for PNO Data Block
+    PNO,
+    /// Indentifier value for BY Data Block
+    BY,
+    /// Indentifier value for PFE Data Block
+    PFE,
+    /// Indentifier value for FEA Data Block
+    FEA,
+    /// Indentifier value for LNK Data Block
+    LNK,
 }
 
 #[derive(Debug)]
 struct Block {
-    _id: String,
+    id: BlockIdent,
     entries: Vec<Line>,
 }
 
 impl Block {
-    fn new(id: &str) -> Self {
+    fn new(id: BlockIdent) -> Self {
         Self {
-            _id: id.to_owned(),
+            id,
             entries: Vec::new(),
         }
     }
@@ -61,8 +87,8 @@ impl THFFile {
 
 impl BlockParse for THFFile {
     fn parse<S: AsRef<str>>(lines: S) -> Self {
-        let mut support_block = Block::new("GTS");
-        let mut batch_block = Block::new("GTL");
+        let mut support_block = Block::new(BlockIdent::GTS);
+        let mut batch_block = Block::new(BlockIdent::GTL);
         let mut current_block: Option<&mut Block> = None;
 
         for line in lines.as_ref().lines() {
@@ -77,7 +103,7 @@ impl BlockParse for THFFile {
                     KeyWordCode::CSE => {}
                     KeyWordCode::EOM => current_block = None,
                 },
-                Code::TypeCode(type_code) => match data.parsed_value {
+                Code::TypeCode(_type_code) => match data.parsed_value {
                     Some(FormatResult::Text(ref value)) if value == "GTS" => {
                         current_block = Some(&mut support_block);
                     }
@@ -86,7 +112,7 @@ impl BlockParse for THFFile {
                     }
                     _ => {}
                 },
-                Code::ZoneCode(zone_name) => {
+                Code::ZoneCode(_zone_name) => {
                     if let Some(block) = &mut current_block {
                         block.add_line(data);
                     }
@@ -399,115 +425,47 @@ impl BlockParse for THFFile {
 //     }
 // }
 
-#[derive(Debug)]
-struct Block {
-    _id: BlockIdent,
-    entries: Vec<Line>,
-}
+// #[derive(Debug)]
+// pub struct GENFile {
+//     geographical_descriptor_block: Block,
+//     geographical_data_block: Block,
+// }
 
-impl Block {
-    fn new(id: BlockIdent) -> Self {
-        Self {
-            _id: id,
-            entries: Vec::new(),
-        }
-    }
+// impl BlockParse for GENFile {
+//     fn parse<S: AsRef<str>>(lines: S) -> Self {
+//         let mut geographical_descriptor_block = Block::new(BlockIdent::DEG);
+//         let mut geographical_data_block = Block::new(BlockIdent::GSE);
+//         let mut current_block: Option<&mut Block> = None;
 
-    fn add_line(&mut self, line: Line) {
-        self.entries.push(line);
-    }
-}
+//         for line in lines.as_ref().lines() {
+//             if line.is_empty() {
+//                 continue;
+//             }
+//             let data = Line::parse_line(&line);
 
-pub trait BlockParse {
-    fn parse<S: AsRef<str>>(lines: S) -> Self;
-}
+//             match data.header.code {
+//                 Code::KWCode(KeyWordCode::BOM) => {}
+//                 Code::RTY => match data.parsed_value {
+//                     Some(FormatResult::Text(ref value)) if value == "DEG" => {
+//                         current_block = Some(&mut geographical_descriptor_block);
+//                     }
+//                     Some(FormatResult::Text(ref value)) if value == "GSE" => {
+//                         current_block = Some(&mut geographical_data_block);
+//                     }
+//                     _ => {}
+//                 },
+//                 Code::KWCode(KeyWordCode::EOM) => current_block = None,
+//                 _ => {
+//                     if let Some(block) = &mut current_block {
+//                         block.add_line(data);
+//                     }
+//                 }
+//             }
+//         }
 
-#[derive(Debug)]
-pub struct THFFile {
-    support_block: Block,
-    batch_block: Block,
-}
-
-impl BlockParse for THFFile {
-    fn parse<S: AsRef<str>>(lines: S) -> Self {
-        let mut support_block = Block::new(BlockIdent::GTS);
-        let mut batch_block = Block::new(BlockIdent::GTL);
-        let mut current_block: Option<&mut Block> = None;
-
-        for line in lines.as_ref().lines() {
-            if line.is_empty() {
-                continue;
-            }
-            let data = Line::parse_line(&line);
-
-            match data.header.code {
-                Code::KWCode(KeyWordCode::BOM) => {}
-                Code::RTY => match data.parsed_value {
-                    Some(FormatResult::Text(ref value)) if value == "GTS" => {
-                        current_block = Some(&mut support_block);
-                    }
-                    Some(FormatResult::Text(ref value)) if value == "GTL" => {
-                        current_block = Some(&mut batch_block);
-                    }
-                    _ => {}
-                },
-                Code::KWCode(KeyWordCode::EOM) => current_block = None,
-                _ => {
-                    if let Some(block) = &mut current_block {
-                        block.add_line(data);
-                    }
-                }
-            }
-        }
-
-        Self {
-            support_block,
-            batch_block,
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct GENFile {
-    geographical_descriptor_block: Block,
-    geographical_data_block: Block,
-}
-
-impl BlockParse for GENFile {
-    fn parse<S: AsRef<str>>(lines: S) -> Self {
-        let mut geographical_descriptor_block = Block::new(BlockIdent::DEG);
-        let mut geographical_data_block = Block::new(BlockIdent::GSE);
-        let mut current_block: Option<&mut Block> = None;
-
-        for line in lines.as_ref().lines() {
-            if line.is_empty() {
-                continue;
-            }
-            let data = Line::parse_line(&line);
-
-            match data.header.code {
-                Code::KWCode(KeyWordCode::BOM) => {}
-                Code::RTY => match data.parsed_value {
-                    Some(FormatResult::Text(ref value)) if value == "DEG" => {
-                        current_block = Some(&mut geographical_descriptor_block);
-                    }
-                    Some(FormatResult::Text(ref value)) if value == "GSE" => {
-                        current_block = Some(&mut geographical_data_block);
-                    }
-                    _ => {}
-                },
-                Code::KWCode(KeyWordCode::EOM) => current_block = None,
-                _ => {
-                    if let Some(block) = &mut current_block {
-                        block.add_line(data);
-                    }
-                }
-            }
-        }
-
-        Self {
-            geographical_descriptor_block,
-            geographical_data_block,
-        }
-    }
-}
+//         Self {
+//             geographical_descriptor_block,
+//             geographical_data_block,
+//         }
+//     }
+// }

@@ -1,6 +1,6 @@
 //! EdigeoBundle is a grouping of [`EDIGéO`] files from directories, such as [`EdigeoDir`].
 use encoding_rs::WINDOWS_1252;
-use std::{borrow::Cow, path::Path};
+use std::borrow::Cow;
 
 use crate::THFFile;
 

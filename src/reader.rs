@@ -1,4 +1,3 @@
-//! Contains all logic for processing [`EDIGéO`] files from directories, such as [`EdigeoDir`].
 use crate::bundle::EdigeoBundle;
 use bzip2::read::BzDecoder;
 use encoding_rs::WINDOWS_1252;
@@ -10,8 +9,6 @@ use std::{
 };
 use tar::Archive;
 
-/// Raw `Bytes` are encoded in `Latin1 (WINDOWS_1252)` and are decoded to
-/// `UTF-8` strings
 pub fn decode_file(data: &[u8]) -> Cow<'_, str> {
     let (cow, _encoding_used, had_errors) = WINDOWS_1252.decode(data);
     if had_errors {
@@ -20,33 +17,23 @@ pub fn decode_file(data: &[u8]) -> Cow<'_, str> {
     cow
 }
 
-/// The [`ExchangeReader`] Trait used for reading the [`EdigeoBundle`] from various sources
-/// namely:
-/// - `.thf` file
-/// - `.tar.bz2` compressed file
-/// - `directory` where .thf file is located
 pub trait ExchangeReader {
-    /// Reads each of the mandatory files and builds a [`EdigeoBundle`] struct.
     fn read_bundle(&self) -> EdigeoBundle;
 }
 
-/// Tar file `.tar.bz2` is the most common exchange format for Edigeo
 struct TarReader {
     path: PathBuf,
 }
 
-/// The directory where the main `.THF` file is located
 struct DirReader {
     path: PathBuf,
 }
 
-/// The main `.THF` file reader
 struct THFReader {
     path: PathBuf,
 }
 
 impl TarReader {
-    /// Constructor method for creating a new [`TarReader`].
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         Self {
             path: path.as_ref().to_owned(),
@@ -55,7 +42,6 @@ impl TarReader {
 }
 
 impl DirReader {
-    /// Constructor method for creating a new [`DirReader`].
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         Self {
             path: path.as_ref().to_owned(),
@@ -64,7 +50,6 @@ impl DirReader {
 }
 
 impl THFReader {
-    /// Constructor method for creating a new [`THFReader`].
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         Self {
             path: path.as_ref().to_owned(),
@@ -153,36 +138,17 @@ impl ExchangeReader for THFReader {
     }
 }
 
-/// The main Edigeo Excahnge can be read from 3 different sources
-/// The [`Reader`] enum has these 3 variants
-/// - Directories
-/// - Tar Archives
-/// - `.THF` files
 enum Reader {
-    /// Directory with all necessary [`EdigeoBundle`] files
     Dir(DirReader),
-    /// `.tar.bz2` archive file with all necessary [`EdigeoBundle`] files
     Tar(TarReader),
-    /// `.thf` file with all necessary [`EdigeoBundle`] files in same directory
     File(THFReader),
 }
 
-/// The main EdigeoReader struct that enables reading any input file type.
-/// ```ignore
-///     let file = "data/edigeo-740240000A01/E0000A01.THF";
-///     let reader = EdigeoReader::new(file);
-///     let data = reader.read_bundle();
-///
-///     println!("{}", data.decode_file(&data.thf));
-/// ```
 pub struct EdigeoReader {
-    /// Enum representing the Reader variants to read the [`ExchangeReader`]
     reader: Reader,
 }
 
 impl EdigeoReader {
-    /// Constructor method to create a [`EdigeoReader`] from any object that can be
-    /// [`AsRef<Path>`] into a path.
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
         let path = path.as_ref().to_owned();
 
@@ -198,7 +164,6 @@ impl EdigeoReader {
         Self { reader }
     }
 
-    /// Consumes the [`EdigeoReader`] and returns the [`EdigeoBundle`]
     pub fn read_bundle(&self) -> EdigeoBundle {
         match self.into_inner() {
             Reader::Dir(dir_reader) => dir_reader.read_bundle(),
@@ -207,28 +172,24 @@ impl EdigeoReader {
         }
     }
 
-    /// Create a reader `with_tar` to create a TAR file reader
     pub fn with_tar<P: AsRef<Path>>(path: P) -> Self {
         Self {
             reader: Reader::Tar(TarReader::new(path)),
         }
     }
 
-    /// Create a reader `with_thf` to create a .THF file reader
     pub fn with_thf<P: AsRef<Path>>(path: P) -> Self {
         Self {
             reader: Reader::File(THFReader::new(path)),
         }
     }
 
-    /// Create a reader `with_dir` to create a Directory reader
     pub fn with_dir<P: AsRef<Path>>(path: P) -> Self {
         Self {
             reader: Reader::Dir(DirReader::new(path)),
         }
     }
 
-    /// Returns the inner [`EdigeoExchange`] Reader Enum
     fn into_inner(&self) -> &Reader {
         &self.reader
     }

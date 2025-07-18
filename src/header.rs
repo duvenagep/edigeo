@@ -1,30 +1,15 @@
-//! Contains Edigeo file [`Header`] definition & logic..
 use crate::error::*;
 use std::str::FromStr;
 
-/// Represents a parsed header in an Edigeo `Line`.
-///
-/// Stores metadata about a header, including code, data type, format, and size.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Header {
-    /// Identifier code for the header.
     pub code: Code,
-
-    /// Data type of the header's value.
     pub value_type: ValueType,
-
-    /// Format of the header's value.
     pub value_format: ValueFormat,
-
-    /// Size of the value in bytes.
     pub value_size: usize,
 }
 
 impl Header {
-    /// Parses a header line into a `Header` struct.
-    ///
-    /// Extracts the header code, value type, format, and size from specified
-    /// byte positions in the line.
     pub fn parse_header(line: &str) -> EdigeoResult<Self> {
         let code = parse_code(line);
         let value_type = parse_value_type(line);
@@ -39,79 +24,39 @@ impl Header {
     }
 }
 
-/// Parses the first 3 bytes of a header line to extract the header code.
-///
-/// Example:  `RTYSA03:GTS` -> `RIY`.
-///
-/// # Panics
-/// Panics if the input does not contain a colon (`:`).
 pub fn parse_code(line: &str) -> Code {
-    // assert!(line.contains(":"), "Input str not of valid form");
     line[0..3]
         .parse::<Code>()
         .expect("Invalid Code value in Header String")
 }
 
-/// Parses the value type from the 4th byte of the header line.
-///
-/// Example:  `RTYSA03:GTS` -> `S`.
-///
-/// # Panics
-/// Panics if parsing `ValueType` fails.
 pub fn parse_value_type(line: &str) -> ValueType {
-    // assert!(line.contains(":"), "Input str not of valid form");
-
     line[3..4]
         .parse::<ValueType>()
         .expect("Invalid Value Type Field.")
 }
 
-/// Parses the value format from the 5th byte of the header line.
-///
-/// Example:  `RTYSA03:GTS` -> `A`.
-///
-/// # Panics
-/// Panics if parsing `ValueFormat` fails.
 pub fn parse_value_format(line: &str) -> ValueFormat {
-    // assert!(line.contains(":"), "Input str not of valid form");
     line[4..5]
         .parse::<ValueFormat>()
         .expect("Invalid Value Format Field.")
 }
 
-/// Parses the value size from the 6th and 7th bytes of the header line.
-///
-/// Example:  `RTYSA03:GTS` -> `3`.
-///
-/// # Panics
-/// Panics if parsing `usize` fails.
 pub fn parse_value_size(line: &str) -> EdigeoResult<usize> {
-    // assert!(line.contains(":"), "Input str not of valid form");
     Ok(line[5..7].parse::<usize>()?)
 }
 
-/// Specifies the format of a value in an Edigeo header.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ValueFormat {
-    /// String of Characters
     A,
-    /// Coordinates
     C,
-    /// Date in 20240116 format
     D,
-    /// Real number with exponent
     E,
-    /// Signed Integer (e.g. -7)
     I,
-    /// Unsigned Integer
     N,
-    /// Descriptor Reference
     P,
-    /// Real number
     R,
-    /// Plain text
     T,
-    /// White Space
     WhiteSpace,
 }
 
@@ -134,15 +79,22 @@ impl FromStr for ValueFormat {
     }
 }
 
-/// Specifies the type of a value in an Edigeo header.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ValueType {
-    /// reserved logical record
     T,
-    /// simple field (1 value only)
     S,
-    /// compound field (several values)
     C,
+}
+
+impl From<&str> for ValueType {
+    fn from(input: &str) -> Self {
+        match input {
+            "T" => ValueType::T,
+            "S" => ValueType::S,
+            "C" => ValueType::C,
+            _ => panic!("Invalid value type"),
+        }
+    }
 }
 
 impl FromStr for ValueType {
@@ -157,25 +109,18 @@ impl FromStr for ValueType {
     }
 }
 
-/// Specifies the Special Codes used to indicate File Position Metadata.
 #[derive(Debug, Clone, PartialEq)]
 pub enum KeyWordCode {
-    /// Indicates the logical start of the file.
     BOM,
-    /// Indicates the name of the character set used.
     CSE,
-    /// Indicates the logical end of the file; its value is always zero.
     EOM,
 }
 
-/// Type of descriptor
 #[derive(Debug, Clone, PartialEq)]
 pub enum TypeCode {
-    /// Type of descriptor
     RTY,
 }
 
-/// Descriptor Identifier
 #[derive(Debug, Clone, PartialEq)]
 #[allow(missing_docs)]
 pub enum ZoneName {
@@ -259,15 +204,11 @@ pub enum ZoneName {
     TEX,
 }
 
-/// Specifies the type of a code in an Edigeo header.
 #[derive(Debug, Clone, PartialEq)]
 #[allow(missing_docs)]
 pub enum Code {
-    /// Special File Keywords
     KWCode(KeyWordCode),
-    /// Type of descriptor
     TypeCode(TypeCode),
-    /// Zonename value Codes
     ZoneCode(ZoneName),
 }
 
@@ -357,34 +298,34 @@ impl FromStr for Code {
             "FTP" => Ok(Code::ZoneCode(ZoneName::FTP)),
             "SNS" => Ok(Code::ZoneCode(ZoneName::SNS)),
             "TEX" => Ok(Code::ZoneCode(ZoneName::TEX)),
-            "RTY" => Ok(Code::RTY),
-            "RID" => Ok(Code::RID),
-            "AUT" => Ok(Code::AUT),
-            "ADR" => Ok(Code::ADR),
-            "LOC" => Ok(Code::LOC),
-            "VOC" => Ok(Code::VOC),
-            "SEC" => Ok(Code::SEC),
-            "RDI" => Ok(Code::RDI),
-            "VER" => Ok(Code::VER),
-            "VDA" => Ok(Code::VDA),
-            "TRL" => Ok(Code::TRL),
-            "EDN" => Ok(Code::EDN),
-            "TDA" => Ok(Code::TDA),
-            "INF" => Ok(Code::INF),
-            "LON" => Ok(Code::LON),
-            "GNN" => Ok(Code::GNN),
-            "GNI" => Ok(Code::GNI),
-            "GON" => Ok(Code::GON),
-            "GOI" => Ok(Code::GOI),
-            "QAN" => Ok(Code::QAN),
-            "QAI" => Ok(Code::QAI),
-            "DIN" => Ok(Code::DIN),
-            "DII" => Ok(Code::DII),
-            "SCN" => Ok(Code::SCN),
-            "SCI" => Ok(Code::SCI),
-            "GDC" => Ok(Code::GDC),
-            "GDN" => Ok(Code::GDN),
-            "GDI" => Ok(Code::GDI),
+            // "RTY" => Ok(Code::ZTY),
+            // "RID" => Ok(Code::RID),
+            // "AUT" => Ok(Code::AUT),
+            // "ADR" => Ok(Code::ADR),
+            // "LOC" => Ok(Code::LOC),
+            // "VOC" => Ok(Code::VOC),
+            // "SEC" => Ok(Code::SEC),
+            // "RDI" => Ok(Code::RDI),
+            // "VER" => Ok(Code::VER),
+            // "VDA" => Ok(Code::VDA),
+            // "TRL" => Ok(Code::TRL),
+            // "EDN" => Ok(Code::EDN),
+            // "TDA" => Ok(Code::TDA),
+            // "INF" => Ok(Code::INF),
+            // "LON" => Ok(Code::LON),
+            // "GNN" => Ok(Code::GNN),
+            // "GNI" => Ok(Code::GNI),
+            // "GON" => Ok(Code::GON),
+            // "GOI" => Ok(Code::GOI),
+            // "QAN" => Ok(Code::QAN),
+            // "QAI" => Ok(Code::QAI),
+            // "DIN" => Ok(Code::DIN),
+            // "DII" => Ok(Code::DII),
+            // "SCN" => Ok(Code::SCN),
+            // "SCI" => Ok(Code::SCI),
+            // "GDC" => Ok(Code::GDC),
+            // "GDN" => Ok(Code::GDN),
+            // "GDI" => Ok(Code::GDI),
             _ => Err(EdigeoError::InvalidFormat(input.to_string())),
         }
     }
